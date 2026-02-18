@@ -1,0 +1,11 @@
+# This file lists the Python dependencies for the project.
+opencv-python # OpenCV library for computer vision tasks and SIFT feature extraction
+numpy # Fundamental package for scientific computing with Python
+pandas # Data manipulation and analysis library
+matplotlib # Plotting library for creating static, animated, and interactive visualizations
+seaborn # Statistical data visualization library based on Matplotlib
+scikit-learn # Machine learning library for Python
+torch # PyTorch library for deep learning and tensor computations
+torchvision # Computer vision library for PyTorch, providing datasets, models, and image transformations
+Pillow # Python Imaging Library (PIL) fork for image processing
+mediapipe # Cross-platform library for building multimodal applied machine learning pipelines
