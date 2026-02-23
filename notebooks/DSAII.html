@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 3100 DSA2 — Comprehensive Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181b24;
+  --surface2: #1e222d;
+  --border: #2a2f3d;
+  --text: #e2e4e9;
+  --text-dim: #9198a8;
+  --accent: #6c9eff;
+  --accent2: #b48eff;
+  --green: #66d9a0;
+  --orange: #ffb366;
+  --red: #ff7070;
+  --yellow: #ffd866;
+  --cyan: #56d4d4;
+  --pink: #f472b6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  padding: 0 20px;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 40px 0 80px; }
+
+/* ---- NAV ---- */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 48px;
+}
+.toc h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 32px; }
+.toc a { color: var(--text-dim); text-decoration: none; font-size: 14px; transition: color .2s; }
+.toc a:hover { color: var(--accent); }
+.toc a .num { color: var(--accent2); font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-right: 6px; }
+
+/* ---- HEADINGS ---- */
+h1 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 48px; }
+
+.quiz-header {
+  margin: 64px 0 32px;
+  padding: 20px 28px;
+  border-radius: 10px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.quiz-header.q1 { background: linear-gradient(135deg, #1a2744, #1a3344); border-left: 4px solid var(--accent); }
+.quiz-header.q2 { background: linear-gradient(135deg, #2a1a44, #1a2244); border-left: 4px solid var(--accent2); }
+.quiz-header.review { background: linear-gradient(135deg, #1a3322, #1a2a22); border-left: 4px solid var(--green); }
+
+h2 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 48px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+h3 { font-size: 17px; font-weight: 600; color: var(--accent); margin: 28px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; color: var(--orange); margin: 20px 0 8px; }
+p { margin-bottom: 14px; }
+
+/* ---- CARDS ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 20px 0;
+}
+.card.example {
+  border-left: 3px solid var(--green);
+  background: linear-gradient(135deg, #131a1a, var(--surface));
+}
+.card.warning {
+  border-left: 3px solid var(--orange);
+  background: linear-gradient(135deg, #1a1712, var(--surface));
+}
+.card.important {
+  border-left: 3px solid var(--red);
+  background: linear-gradient(135deg, #1a1214, var(--surface));
+}
+.card.visual {
+  border-left: 3px solid var(--accent2);
+  background: linear-gradient(135deg, #161220, var(--surface));
+}
+.card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  display: block;
+}
+.card-label.ex { color: var(--green); }
+.card-label.warn { color: var(--orange); }
+.card-label.imp { color: var(--red); }
+.card-label.vis { color: var(--accent2); }
+.card-label.hw { color: var(--cyan); }
+
+/* ---- CODE ---- */
+pre, code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+pre {
+  background: #0d0e13;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 14px 0;
+  line-height: 1.6;
+}
+code { color: var(--cyan); }
+.kw { color: var(--accent2); }
+.cm { color: var(--text-dim); font-style: italic; }
+.fn { color: var(--accent); }
+.st { color: var(--green); }
+.num { color: var(--orange); }
+
+/* ---- TABLES ---- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+th {
+  background: var(--surface2);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:hover td { background: rgba(108,158,255,0.04); }
+
+/* ---- DIAGRAMS ---- */
+.diagram {
+  background: #0d0e13;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px;
+  margin: 20px 0;
+  overflow-x: auto;
+  text-align: center;
+}
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  display: inline-block;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.diagram .caption {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 12px;
+  font-style: italic;
+}
+
+/* ---- STEP FLOW ---- */
+.steps { display: flex; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+.step {
+  flex: 1;
+  min-width: 160px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+.step-num {
+  display: inline-block;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  line-height: 26px;
+  margin-bottom: 8px;
+}
+.step-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.step-desc { font-size: 13px; color: var(--text-dim); }
+
+/* ---- HIGHLIGHT BOXES ---- */
+.formula {
+  background: linear-gradient(135deg, #161825, #1a1e2e);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin: 16px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  text-align: center;
+  color: var(--yellow);
+}
+.formula .label {
+  display: block;
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+/* ---- TIMELINE ---- */
+.timeline {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.t-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 40px;
+}
+.t-cell .t-time { color: var(--text-dim); font-size: 10px; }
+.t-cell .t-node {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600;
+  font-size: 11px;
+  margin: 4px 0;
+}
+.t-cell .t-node.white { background: #333; color: #999; }
+.t-cell .t-node.gray { background: #4a6; color: #fff; }
+.t-cell .t-node.black { background: #234; color: #8bf; border: 2px solid #567; }
+.t-arrow { color: var(--text-dim); font-size: 16px; margin: 0 2px; }
+
+/* ---- TAGS ---- */
+.tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 2px 2px;
+}
+.tag.tree { background: #1a3a2a; color: var(--green); }
+.tag.back { background: #3a2a1a; color: var(--orange); }
+.tag.fwd { background: #2a1a3a; color: var(--accent2); }
+.tag.cross { background: #3a1a2a; color: var(--pink); }
+.tag.theta { background: #1a2a3a; color: var(--accent); }
+.tag.big-o { background: #2a2a1a; color: var(--yellow); }
+
+/* ---- GRID ---- */
+.adj-matrix {
+  display: inline-grid;
+  gap: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  margin: 12px auto;
+}
+.adj-matrix .cell {
+  width: 32px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
+}
+.adj-matrix .cell.header { background: var(--surface2); color: var(--accent); font-weight: 600; font-size: 11px; }
+.adj-matrix .cell.one { color: var(--green); font-weight: 600; }
+.adj-matrix .cell.zero { color: #444; }
+
+/* Checklist */
+.checklist { list-style: none; margin: 12px 0; }
+.checklist li {
+  padding: 6px 0 6px 28px;
+  position: relative;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+/* ---- MISC ---- */
+strong { color: var(--text); font-weight: 600; }
+em { color: var(--yellow); font-style: normal; }
+.dim { color: var(--text-dim); }
+.accent { color: var(--accent); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.red { color: var(--red); }
+.purple { color: var(--accent2); }
+.pink { color: var(--pink); }
+hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+.spacer { height: 32px; }
+
+@media (max-width: 700px) {
+  h1 { font-size: 28px; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .steps { flex-direction: column; }
+  .card { padding: 18px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>CS 3100 — DSA2 Study Guide</h1>
+<p class="subtitle">Prof. Floryan & Prof. Bloomfield · Spring 2026 · With Visuals & Worked Examples from Slides + Homeworks</p>
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <div class="toc-grid">
+    <div>
+      <a href="#review"><span class="num">§0</span> Review: Asymptotic Analysis</a><br>
+      <a href="#q1"><span class="num">Q1</span> Graphs</a><br>
+      <a href="#repr"><span class="num">1</span> Graph Representations</a><br>
+      <a href="#bfs"><span class="num">2</span> BFS</a><br>
+      <a href="#bipartite"><span class="num">3</span> Bipartite Graphs</a><br>
+      <a href="#dfs"><span class="num">4</span> DFS & Edge Classification</a><br>
+      <a href="#topo"><span class="num">5</span> Topological Sort</a><br>
+      <a href="#scc"><span class="num">6</span> Strongly Connected Components</a><br>
+      <a href="#sink"><span class="num">7</span> Universal Sink (PS2)</a><br>
+    </div>
+    <div>
+      <a href="#q2"><span class="num">Q2</span> Divide & Conquer</a><br>
+      <a href="#dc-intro"><span class="num">8</span> D&C Strategy & Examples</a><br>
+      <a href="#recurrences"><span class="num">9</span> Solving Recurrences</a><br>
+      <a href="#master"><span class="num">10</span> Master Theorem</a><br>
+      <a href="#karatsuba"><span class="num">11</span> Karatsuba Multiplication</a><br>
+      <a href="#closest"><span class="num">12</span> Closest Pair of Points</a><br>
+      <a href="#quickselect"><span class="num">13</span> Quickselect & Median of Medians</a><br>
+      <a href="#checklist"><span class="num">✓</span> Practice Checklist</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- REVIEW SECTION -->
+<!-- ============================================================ -->
+<div class="quiz-header review" id="review">§0 — Prerequisite Review: Asymptotic Analysis</div>
+<p class="dim">From 00Review slides & PS1. Foundational for both quizzes.</p>
+
+<h2>The Big Five Notations</h2>
+
+<table>
+  <tr>
+    <th>Notation</th>
+    <th>Analogy</th>
+    <th>Formal (constants)</th>
+    <th>Formal (limit)</th>
+    <th>Intuition</th>
+  </tr>
+  <tr>
+    <td><code>O(g)</code></td>
+    <td><strong>≤</strong></td>
+    <td>f(n) ≤ c·g(n) for <em>some</em> c, n ≥ n₀</td>
+    <td>lim f/g < ∞</td>
+    <td>Upper bound</td>
+  </tr>
+  <tr>
+    <td><code>Ω(g)</code></td>
+    <td><strong>≥</strong></td>
+    <td>f(n) ≥ c·g(n) for <em>some</em> c, n ≥ n₀</td>
+    <td>lim f/g > 0</td>
+    <td>Lower bound</td>
+  </tr>
+  <tr>
+    <td><code>Θ(g)</code></td>
+    <td><strong>=</strong></td>
+    <td>O(g) ∩ Ω(g)</td>
+    <td>lim f/g = c, 0 < c < ∞</td>
+    <td>Tight bound</td>
+  </tr>
+  <tr>
+    <td><code>o(g)</code></td>
+    <td><strong><</strong></td>
+    <td>f(n) < c·g(n) for <em>any</em> c</td>
+    <td>lim f/g = 0</td>
+    <td>Strictly slower</td>
+  </tr>
+  <tr>
+    <td><code>ω(g)</code></td>
+    <td><strong>></strong></td>
+    <td>f(n) > c·g(n) for <em>any</em> c</td>
+    <td>lim f/g = ∞</td>
+    <td>Strictly faster</td>
+  </tr>
+</table>
+
+<h3>Growth Rate Hierarchy</h3>
+<div class="diagram">
+<pre style="font-size:14px; color: var(--text);">
+  <span style="color:var(--green)">1</span>  <  <span style="color:var(--green)">log n</span>  <  <span style="color:var(--cyan)">√n</span>  <  <span style="color:var(--accent)">n</span>  <  <span style="color:var(--yellow)">n log n</span>  <  <span style="color:var(--orange)">n²</span>  <  <span style="color:var(--red)">n³</span>  <  <span style="color:var(--pink)">2ⁿ</span>  <  <span style="color:var(--accent2)">n!</span>  <  <span style="color:#ff5555">nⁿ</span>
+  ────────────────────────────────────────────────────────────────────────────────────►
+  <span class="dim">slower growth                                                          faster growth</span>
+</pre>
+<div class="caption">Key facts: log n ∈ o(nᵅ) for any α > 0 · nᵇ ∈ o(αⁿ) for any α > 1 · Changing log base = multiplying by constant · log(n!) ∈ Θ(n log n)</div>
+</div>
+
+<h3>Worked Example 1: Direct Proof <span class="dim">(from 00Review slides)</span></h3>
+<div class="card example">
+  <span class="card-label ex">📐 Slide Example — Direct Proof</span>
+  <p><strong>Show:</strong> n log n ∈ O(n²)</p>
+  <p><strong>Technique:</strong> Find c and n₀ such that n log n ≤ c·n²</p>
+  <p><strong>Proof:</strong> Let c = 1 and n₀ = 1.</p>
+  <pre>
+  Base: 1 · log(1) ≤ 1 · (1²)  →  0 ≤ 1  ✓
+
+  For all n > 1:
+      log n ≤ n           <span class="cm">// key inequality</span>
+    → n · log n ≤ n · n
+    → n log n ≤ n²       ✓  <span class="cm">// with c=1, n₀=1</span>
+  </pre>
+</div>
+
+<h3>Worked Example 2: Proof by Contradiction <span class="dim">(from 00Review slides)</span></h3>
+<div class="card example">
+  <span class="card-label ex">📐 Slide Example — Contradiction</span>
+  <p><strong>Show:</strong> n² ∉ O(n)</p>
+  <p><strong>Proof:</strong> Assume n² ∈ O(n). Then ∃c such that c·n ≥ n² for all large n.</p>
+  <pre>
+      c · n ≥ n²
+      c ≥ n             <span class="cm">// divide both sides by n</span>
+
+  But n is an increasing variable and c is a constant.
+  <span style="color:var(--red)">Contradiction!</span> No constant c can be ≥ all values of n.  ∎
+  </pre>
+</div>
+
+<h3>Worked Example 3: Limit Method <span class="dim">(from PS1 Solution)</span></h3>
+<div class="card example">
+  <span class="card-label hw">📝 PS1 Problem 1.2</span>
+  <p><strong>Given:</strong> f(n) = 5n³ and g(n) = 8n³ + n². Classify f relative to g.</p>
+  <pre>
+                    5n³           5n³         5
+  lim (n→∞)  ───────────  =  ─────────  =  ───  =  <span style="color:var(--yellow)">0.625</span>
+                 8n³ + n²        8n³         8
+  </pre>
+  <p><strong>Result:</strong> The limit is 5/8, a finite positive constant. Therefore:</p>
+  <table>
+    <tr><th>Class</th><th>Condition</th><th>Result</th></tr>
+    <tr><td><code>O(g)</code></td><td>5/8 < ∞</td><td class="green">✓ Yes</td></tr>
+    <tr><td><code>Ω(g)</code></td><td>5/8 > 0</td><td class="green">✓ Yes</td></tr>
+    <tr><td><code>Θ(g)</code></td><td>0 < 5/8 < ∞</td><td class="green">✓ Yes</td></tr>
+    <tr><td><code>o(g)</code></td><td>5/8 ≠ 0</td><td class="red">✗ No</td></tr>
+    <tr><td><code>ω(g)</code></td><td>5/8 ≠ ∞</td><td class="red">✗ No</td></tr>
+  </table>
+</div>
+
+<h3>Worked Example 4: Direct Proof for Θ <span class="dim">(from PS1 Solution)</span></h3>
+<div class="card example">
+  <span class="card-label hw">📝 PS1 Problem 1.1</span>
+  <p><strong>Given:</strong> f(n) = 2n² log n + 4n, g(n) = n² log n. Show f(n) = Θ(g(n)).</p>
+  <p><strong>Strategy:</strong> Find c and n₀ such that f(n) ≤ c·g(n).</p>
+  <pre>
+  Choose <span style="color:var(--yellow)">c = 4</span>, <span style="color:var(--yellow)">n₀ = 2</span>:
+
+      2n² log n + 3n  ≤  4n² log n
+      3n  ≤  2n² log n
+      3  ≤  2n log n          <span class="cm">// divide by n</span>
+
+  For n ≥ 2:  2(2)(1) = 4 ≥ 3  ✓
+  This grows as n grows, so holds for all n ≥ 2.  ∎
+  </pre>
+</div>
+
+<!-- ============================================================ -->
+<!-- QUIZ 1: GRAPHS -->
+<!-- ============================================================ -->
+<div class="quiz-header q1" id="q1">Quiz 1 — Graphs</div>
+<p class="dim">Slides 011, 012 · Problem Sets 1, 2</p>
+
+<h2 id="repr">Topic 1: Graph Representations</h2>
+
+<h3>Visual: Same Graph, Two Representations</h3>
+<div class="card visual">
+  <span class="card-label vis">🔗 Visual Diagram — from Slide 011</span>
+  <div class="diagram" style="display:flex; gap:40px; flex-wrap:wrap; justify-content:center; align-items:flex-start;">
+    <div>
+      <pre style="color:var(--text)">
+     <span class="accent">0</span> ─── <span class="accent">1</span>
+    / \   / \
+   <span class="accent">2</span> ─── <span class="accent">3</span>
+     \   / \
+  <span class="accent">4</span>   <span class="accent">5</span> ─── <span class="accent">6</span>
+      </pre>
+      <div class="caption">The undirected graph G</div>
+    </div>
+    <div>
+      <div style="font-size:13px; font-family:'JetBrains Mono',monospace; color:var(--text);">
+        <strong class="accent">Adjacency Matrix:</strong><br>
+        <table style="width:auto; margin:8px 0;">
+          <tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+          <tr><td><strong class="accent">0</strong></td><td class="dim">0</td><td class="green">1</td><td class="green">1</td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td></tr>
+          <tr><td><strong class="accent">1</strong></td><td class="green">1</td><td class="dim">0</td><td class="green">1</td><td class="green">1</td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td></tr>
+          <tr><td><strong class="accent">2</strong></td><td class="green">1</td><td class="green">1</td><td class="dim">0</td><td class="green">1</td><td class="dim">0</td><td class="green">1</td><td class="dim">0</td></tr>
+          <tr><td><strong class="accent">3</strong></td><td class="dim">0</td><td class="green">1</td><td class="green">1</td><td class="dim">0</td><td class="dim">0</td><td class="green">1</td><td class="dim">0</td></tr>
+          <tr><td><strong class="accent">4</strong></td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td><td class="green">1</td><td class="dim">0</td></tr>
+          <tr><td><strong class="accent">5</strong></td><td class="dim">0</td><td class="dim">0</td><td class="green">1</td><td class="green">1</td><td class="green">1</td><td class="dim">0</td><td class="green">1</td></tr>
+          <tr><td><strong class="accent">6</strong></td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td><td class="dim">0</td><td class="green">1</td><td class="dim">0</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13px; font-family:'JetBrains Mono',monospace; color:var(--text);">
+        <strong class="accent">Adjacency List:</strong><br><br>
+        <span class="accent">0</span> → [1, 2]<br>
+        <span class="accent">1</span> → [2, 0, 3]<br>
+        <span class="accent">2</span> → [3, 5, 0, 1]<br>
+        <span class="accent">3</span> → [1, 2, 5]<br>
+        <span class="accent">4</span> → [5]<br>
+        <span class="accent">5</span> → [4, 6, 2, 3]<br>
+        <span class="accent">6</span> → [5]
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Runtime Comparison</h3>
+<table>
+  <tr><th>Operation</th><th>Adj. List</th><th>Adj. Matrix</th></tr>
+  <tr><td>Space</td><td><span class="tag theta">Θ(n+m)</span></td><td><span class="tag theta">Θ(n²)</span></td></tr>
+  <tr><td>Add Edge</td><td>Θ(1)</td><td>Θ(1)</td></tr>
+  <tr><td>Remove Edge (v,w)</td><td>Θ(deg(v))</td><td>Θ(1)</td></tr>
+  <tr><td>Edge exists?</td><td>Θ(deg(v))</td><td><strong>Θ(1)</strong> ← big advantage</td></tr>
+  <tr><td>Outgoing neighbors</td><td><strong>Θ(deg(v))</strong> ← big advantage</td><td>Θ(n)</td></tr>
+  <tr><td>Incoming neighbors</td><td>Θ(n+m)</td><td>Θ(n)</td></tr>
+</table>
+
+<hr>
+<h2 id="bfs">Topic 2: Breadth-First Search (BFS)</h2>
+
+<pre>
+<span class="kw">BFS</span>(g, s):
+    toVisit.<span class="fn">enqueue</span>(s)
+    depth[s] = <span class="num">0</span>
+    depth = [<span class="num">-1</span>, <span class="num">-1</span>, ..., <span class="num">-1</span>]   <span class="cm">// |V| times</span>
+    <span class="kw">While</span> toVisit not empty:
+        cur = toVisit.<span class="fn">dequeue</span>()
+        layer = depth[cur]
+        <span class="kw">for</span> v <span class="kw">in</span> neighbors(cur):
+            <span class="kw">if</span> v does not have a depth:
+                depth[v] = layer + <span class="num">1</span>
+                toVisit.<span class="fn">enqueue</span>(v)
+</pre>
+
+<h3>Worked BFS Trace <span class="dim">(from PS1 Solution)</span></h3>
+<div class="card example">
+  <span class="card-label hw">📝 PS1 Problem 3 — BFS on a Digraph</span>
+  <div class="diagram">
+    <pre style="color:var(--text)">
+        <span class="accent">A</span> ──→ <span class="accent">B</span>     <span class="accent">C</span> ──→ <span class="accent">D</span>
+        │      ↑ ↘       ↑
+        ↓      │   ↘     │
+        <span class="accent">G</span> ──→ <span class="accent">H</span>     <span class="accent">E</span> ──→ <span class="accent">F</span>
+    </pre>
+    <div class="caption">Unweighted digraph from PS1</div>
+  </div>
+  <p><strong>BFS starting at A</strong> (break ties alphabetically):</p>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:14px;">
+<span class="cm">Visit order:</span>   <span style="color:var(--green);font-weight:700">A</span> → <span style="color:var(--green);font-weight:700">B</span> → <span style="color:var(--green);font-weight:700">F</span> → <span style="color:var(--green);font-weight:700">H</span> → <span style="color:var(--green);font-weight:700">D</span> → <span style="color:var(--green);font-weight:700">C</span> → <span style="color:var(--green);font-weight:700">E</span> → <span style="color:var(--green);font-weight:700">G</span>
+
+<span class="cm">BFS Tree Layers:</span>
+
+  Layer 0:     <span style="color:var(--accent)">[ A ]</span>             depth = 0
+                ↓
+  Layer 1:   <span style="color:var(--green)">[ B  F  H ]</span>         depth = 1
+              ↓     ↓
+  Layer 2: <span style="color:var(--yellow)">[ D  C  E  G ]</span>      depth = 2
+    </pre>
+  </div>
+  <p><strong>Max differential distance</strong> (PS1 Q3.2): The difference between max and min distance on the queue at any moment is always <em>0 or 1</em>. This holds for BFS on <strong>any</strong> graph.</p>
+</div>
+
+<hr>
+<h2 id="bipartite">Topic 3: Bipartite Graphs</h2>
+
+<div class="card visual">
+  <span class="card-label vis">🎨 Visual — Bipartite vs Non-Bipartite (from Slide 011)</span>
+  <div style="display:flex; gap:40px; flex-wrap:wrap; justify-content: center;">
+    <div class="diagram" style="flex:1; min-width:250px;">
+      <pre style="color:var(--text)">
+   <span style="color:var(--accent)">1</span>───<span style="color:var(--green)">2</span>
+   │     │
+   <span style="color:var(--green)">3</span>───<span style="color:var(--accent)">4</span>     <span style="color:var(--green)">✓ Bipartite!</span>
+   │     │     Two-colorable
+   <span style="color:var(--accent)">5</span>───<span style="color:var(--green)">6</span>
+
+  <span style="color:var(--accent)">■ Team A</span>    <span style="color:var(--green)">■ Team B</span>
+      </pre>
+    </div>
+    <div class="diagram" style="flex:1; min-width:250px;">
+      <pre style="color:var(--text)">
+   <span style="color:var(--accent)">1</span>───<span style="color:var(--green)">2</span>
+   │ ╲   │
+   │  <span style="color:var(--red)">4</span>  │     <span style="color:var(--red)">✗ NOT Bipartite!</span>
+   │ ╱   │     Node 4 can't be colored
+   <span style="color:var(--green)">3</span>───<span style="color:var(--accent)">?</span>
+
+  Odd cycle: 1→2→4→1
+      </pre>
+    </div>
+  </div>
+</div>
+
+<p><strong>Key theorem:</strong> A graph is bipartite <strong>if and only if</strong> it has <em>no odd-length cycles</em>.</p>
+
+<p><strong>Detection via BFS:</strong> Run BFS and track layers. If a non-tree edge connects two nodes at the <strong>same parity</strong> (both odd or both even layer), the graph is NOT bipartite.</p>
+
+<pre>
+<span class="cm">// Add to BFS inner loop:</span>
+<span class="kw">elif</span> bothOddOrBothEven(depth[v], depth[cur]):
+    <span class="kw">return</span> <span class="st">False</span>   <span class="cm">// NOT bipartite!</span>
+<span class="kw">return</span> <span class="st">True</span>
+</pre>
+
+<hr>
+<h2 id="dfs">Topic 4: DFS & Edge Classification</h2>
+
+<h3>DFS Algorithm (Recursive)</h3>
+<pre>
+<span class="fn">DFS-VISIT</span>(G, u):
+    time = time + <span class="num">1</span>
+    u.d = time              <span class="cm">// discovery time</span>
+    u.color = <span style="color:var(--green)">GRAY</span>
+    <span class="kw">for each</span> v <span class="kw">in</span> G.Adj[u]:
+        <span class="kw">if</span> v.color == <span style="color:var(--text-dim)">WHITE</span>:
+            v.π = u
+            <span class="fn">DFS-VISIT</span>(G, v)   <span class="cm">// → Tree Edge</span>
+    u.color = <span style="color:var(--accent)">BLACK</span>
+    time = time + <span class="num">1</span>
+    u.f = time              <span class="cm">// finish time</span>
+</pre>
+
+<h3>Edge Types — Visual <span class="dim">(from Slide 012)</span></h3>
+<div class="card visual">
+  <span class="card-label vis">🌲 DFS Edge Classification</span>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:14px;">
+                <span class="accent">X</span>
+              ╱   ╲
+            <span class="accent">Z</span>       <span class="accent">Y</span>
+            │
+            <span class="accent">W</span>
+
+  <span class="green">━━━━▶</span>  Tree Edge       X→Z, X→Y, Z→W   <span class="dim">(v is WHITE)</span>
+  <span class="orange">╌╌╌╌▶</span>  Back Edge       W→X              <span class="dim">(v is GRAY → CYCLE!)</span>
+  <span class="purple">╍╍╍╍▶</span>  Forward Edge    X→W              <span class="dim">(v is BLACK, u.d < v.d)</span>
+  <span class="pink">┄┄┄┄▶</span>  Cross Edge      Y→W              <span class="dim">(v is BLACK, u.d > v.d)</span>
+    </pre>
+  </div>
+  <p><strong>How to tell using timestamps:</strong></p>
+  <table>
+    <tr><th>Edge u→v</th><th>Timestamp Pattern</th><th>Interval Relationship</th></tr>
+    <tr><td><span class="tag tree">Tree / Forward</span></td><td>u.d < v.d < v.f < u.f</td><td>v nested inside u</td></tr>
+    <tr><td><span class="tag back">Back</span></td><td>v.d < u.d < u.f < v.f</td><td>u nested inside v</td></tr>
+    <tr><td><span class="tag cross">Cross</span></td><td>v.d < v.f < u.d < u.f</td><td>v entirely before u</td></tr>
+  </table>
+</div>
+
+<h3>Worked DFS Trace <span class="dim">(from PS2 Solution)</span></h3>
+<div class="card example">
+  <span class="card-label hw">📝 PS2 Problem 1 — Full DFS from v4</span>
+  <p>DFS on the 10-node graph starting at <strong>v4</strong>, processing neighbors in numerical order:</p>
+  <div class="diagram">
+    <pre style="font-size:12px; color:var(--text);">
+        v1 ──── v5 ──── v7
+        │╲      │       │
+        │  ╲    │       │
+        v8   v2 ──── v10
+              │╲
+              │  ╲
+        v3 ──── v6 ──── v9
+        │
+        v4  <span class="green">← START</span>
+    </pre>
+  </div>
+
+  <p><strong>Discovery & Finish Times:</strong></p>
+  <table>
+    <tr><th>Node</th><th>Start</th><th>Finish</th><th>Visual Interval</th></tr>
+    <tr><td><strong>v4</strong></td><td class="green">1</td><td class="accent">20</td><td><code style="color:var(--green)">|──────────────────────────────────────|</code></td></tr>
+    <tr><td><strong>v1</strong></td><td class="green">2</td><td class="accent">19</td><td><code style="color:var(--accent)"> |────────────────────────────────────|</code></td></tr>
+    <tr><td><strong>v2</strong></td><td class="green">3</td><td class="accent">16</td><td><code style="color:var(--yellow)">  |──────────────────────────────|</code></td></tr>
+    <tr><td><strong>v5</strong></td><td class="green">4</td><td class="accent">15</td><td><code style="color:var(--orange)">   |────────────────────────────|</code></td></tr>
+    <tr><td><strong>v3</strong></td><td class="green">5</td><td class="accent">12</td><td><code style="color:var(--pink)">    |──────────────────|</code></td></tr>
+    <tr><td><strong>v6</strong></td><td class="green">6</td><td class="accent">7</td><td><code style="color:var(--cyan)">     |──|</code></td></tr>
+    <tr><td><strong>v7</strong></td><td class="green">8</td><td class="accent">11</td><td><code style="color:var(--accent2)">         |────────|</code></td></tr>
+    <tr><td><strong>v10</strong></td><td class="green">9</td><td class="accent">10</td><td><code style="color:var(--text-dim)">          |──────|</code></td></tr>
+    <tr><td><strong>v9</strong></td><td class="green">13</td><td class="accent">14</td><td><code style="color:var(--red)">                      |──|</code></td></tr>
+    <tr><td><strong>v8</strong></td><td class="green">17</td><td class="accent">18</td><td><code style="color:var(--text)">                              |──|</code></td></tr>
+  </table>
+
+  <p><strong>Edge Classification Results:</strong></p>
+  <table>
+    <tr><th>Edge</th><th>From→To</th><th>Type</th><th>Why?</th></tr>
+    <tr><td>i</td><td>v4→v1</td><td><span class="tag tree">Tree</span></td><td>v1 was WHITE</td></tr>
+    <tr><td>a</td><td>v1→v2</td><td><span class="tag tree">Tree</span></td><td>v2 was WHITE</td></tr>
+    <tr><td>d</td><td>v2→v4</td><td><span class="tag back">Back</span></td><td>v4 was <span class="green">GRAY</span> (ancestor) → <strong>cycle!</strong></td></tr>
+    <tr><td>e</td><td>v2→v5</td><td><span class="tag tree">Tree</span></td><td>v5 was WHITE</td></tr>
+    <tr><td>b</td><td>v1→v3</td><td><span class="tag fwd">Descendant</span></td><td>v3 BLACK, v1.d=2 < v3.d=5</td></tr>
+    <tr><td>f</td><td>v2→v7</td><td><span class="tag fwd">Descendant</span></td><td>v7 BLACK, v2.d=3 < v7.d=8</td></tr>
+    <tr><td>j</td><td>v4→v2</td><td><span class="tag fwd">Descendant</span></td><td>v2 BLACK, v4.d=1 < v2.d=3</td></tr>
+    <tr><td>m</td><td>v6→v3</td><td><span class="tag back">Back</span></td><td>v3 was GRAY (ancestor)</td></tr>
+    <tr><td>o</td><td>v8→v5</td><td><span class="tag cross">Cross</span></td><td>v5 BLACK, v8.d=17 > v5.d=4</td></tr>
+    <tr><td>p</td><td>v9→v7</td><td><span class="tag cross">Cross</span></td><td>v7 BLACK, v9.d=13 > v7.d=8</td></tr>
+    <tr><td>q</td><td>v10→v6</td><td><span class="tag cross">Cross</span></td><td>v6 BLACK, v10.d=9 > v6.d=6</td></tr>
+  </table>
+</div>
+
+<hr>
+<h2 id="topo">Topic 5: Topological Sort</h2>
+
+<p><strong>Definition:</strong> Given a DAG, produce a linear ordering where if u→v exists, u comes before v.</p>
+
+<div class="formula">
+  <span class="label">Key Insight</span>
+  Topologically sorted vertices appear in <strong>reverse order of their DFS finish times</strong>
+</div>
+
+<p>Modification to DFS: when a node finishes (turns BLACK), <strong>prepend</strong> it to the output list.</p>
+
+<div class="card warning">
+  <span class="card-label warn">⚠️ Watch Out</span>
+  <p>If DFS encounters a GRAY node during topological sort, there is a <strong>cycle</strong> and no valid topological sort exists! This is the check <code>if v.color == GRAY: // Cycle!</code> in the modified DFS-VISIT.</p>
+</div>
+
+<hr>
+<h2 id="scc">Topic 6: Strongly Connected Components</h2>
+
+<h3>Kosaraju-Sharir Algorithm</h3>
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-title">DFS on G</div>
+    <div class="step-desc">Run DFS, record all finish times</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-title">Transpose G → G'</div>
+    <div class="step-desc">Reverse all edge directions</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-title">DFS on G'</div>
+    <div class="step-desc">Process in <em>decreasing</em> finish time from Step 1</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-title">Read SCCs</div>
+    <div class="step-desc">Each DFS tree in Step 3 = one SCC</div>
+  </div>
+</div>
+
+<h3>Visual Walkthrough <span class="dim">(from Slide 012)</span></h3>
+<div class="card visual">
+  <span class="card-label vis">🔁 SCC Example from Lecture</span>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:13px;">
+<span class="cm">Original Graph with DFS timestamps (start/finish):</span>
+
+    <span style="color:var(--accent)">A</span>         <span style="color:var(--accent)">B</span>         <span style="color:var(--green)">C</span>         <span style="color:var(--green)">D</span>
+  <span class="dim">11/12</span>     <span class="dim">9/14</span>      <span class="dim">1/8</span>       <span class="dim">6/7</span>
+    │         │  ╲       │         │
+    ▼         ▼    ▼     ▼         ▼
+    <span style="color:var(--accent)">E</span>         <span style="color:var(--accent)">F</span>         <span style="color:var(--green)">G</span>
+  <span class="dim">3/4</span>       <span class="dim">2/5</span>     <span class="dim">10/13</span>
+
+<span class="cm">Component Graph (each SCC condensed):</span>
+
+  ┌─────────────┐     ┌─────────────┐
+  │ <span style="color:var(--accent)">SCC1: {A,B,</span> │ ──→ │ <span style="color:var(--green)">SCC2: {C,D,</span> │
+  │ <span style="color:var(--accent)">       E,F,G}</span>│     │ <span style="color:var(--green)">           }</span>│
+  └─────────────┘     └─────────────┘
+
+  Highest finish time = <span style="color:var(--yellow)">B (finish=14)</span> → guaranteed in topologically first SCC
+  Running DFS on G' prevents escaping SCCs via reversed edges
+    </pre>
+  </div>
+</div>
+
+<div class="card important">
+  <span class="card-label imp">🚨 PS2 Problem 2 — Broken Alternative Algorithm</span>
+  <p><strong>Question:</strong> Does running DFS again on the <em>same G</em> (NOT the transpose) in <em>increasing</em> finish time order also find SCCs?</p>
+  <p><strong>Answer: NO!</strong> This fails. You must construct a counterexample — a graph where an SCC has two parent SCCs that are not connected to each other.</p>
+</div>
+
+<hr>
+<h2 id="sink">Topic 7: Universal Sink <span class="dim">(PS2 Problem 3)</span></h2>
+
+<div class="card example">
+  <span class="card-label hw">📝 PS2 Problem 3 — O(|V|) Algorithm Design</span>
+  <p><strong>Problem:</strong> Given a directed graph as an adjacency matrix, find a universal sink (0 outgoing, |V|−1 incoming edges) in O(|V|) time.</p>
+
+  <h4>Key Insight: Each matrix lookup eliminates one candidate</h4>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:13px;">
+  Check G[u][v]:
+
+  ┌─────────────────────────────────────────────────────┐
+  │  If G[u][v] = <span style="color:var(--green)">1</span>:  u has outgoing edge              │
+  │                   → <span style="color:var(--red)">u ELIMINATED</span> (can't be sink)    │
+  │                   → v might still be sink           │
+  │                                                     │
+  │  If G[u][v] = <span style="color:var(--red)">0</span>:  v missing incoming edge from u    │
+  │                   → <span style="color:var(--red)">v ELIMINATED</span> (can't be sink)    │
+  │                   → u might still be sink           │
+  └─────────────────────────────────────────────────────┘
+    </pre>
+  </div>
+
+  <h4>Algorithm</h4>
+  <pre>
+u = <span class="num">0</span>, v = <span class="num">1</span>          <span class="cm">// two candidates</span>
+<span class="kw">while</span> v < |V|:
+    <span class="kw">if</span> G[u][v] == <span class="num">0</span>:    <span class="cm">// v eliminated</span>
+        v = v + <span class="num">1</span>
+    <span class="kw">else</span>:               <span class="cm">// u eliminated</span>
+        u = v
+        v = v + <span class="num">1</span>
+<span class="cm">// u is the only remaining candidate</span>
+<span class="cm">// Verify: sweep row u (all 0s?) and column u (all 1s except u,u?)</span>
+  </pre>
+  <p><strong>Runtime:</strong> O(|V|) — each step eliminates one node, then one O(|V|) verification pass.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- QUIZ 2: DIVIDE & CONQUER -->
+<!-- ============================================================ -->
+<div class="quiz-header q2" id="q2">Quiz 2 — Divide & Conquer</div>
+<p class="dim">Slides 021–025 · Problem Sets 3, 4</p>
+
+<h2 id="dc-intro">Topic 8: D&C Strategy & Classic Examples</h2>
+
+<div class="steps">
+  <div class="step" style="border-color: var(--accent2)">
+    <div class="step-num" style="background:var(--accent2)">1</div>
+    <div class="step-title">Divide</div>
+    <div class="step-desc">Break into smaller subproblems of the <em>same form</em></div>
+  </div>
+  <div class="step" style="border-color: var(--accent2)">
+    <div class="step-num" style="background:var(--accent2)">2</div>
+    <div class="step-title">Conquer</div>
+    <div class="step-desc">Solve subproblems recursively</div>
+  </div>
+  <div class="step" style="border-color: var(--accent2)">
+    <div class="step-num" style="background:var(--accent2)">3</div>
+    <div class="step-title">Combine</div>
+    <div class="step-desc">Merge sub-solutions into final answer</div>
+  </div>
+</div>
+
+<h3>Mergesort — Visual <span class="dim">(from Slide 021)</span></h3>
+<div class="card visual">
+  <span class="card-label vis">🔀 Mergesort Divide & Conquer</span>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:13px;">
+                    <span class="orange">[38  27  43  3  9  82  10]</span>
+                         ╱              ╲
+              <span style="color:var(--yellow)">[38  27  43  3]</span>        <span style="color:var(--yellow)">[9  82  10]</span>
+                ╱        ╲             ╱       ╲
+          <span style="color:var(--green)">[38  27]</span>   <span style="color:var(--green)">[43  3]</span>    <span style="color:var(--green)">[9  82]</span>   <span style="color:var(--green)">[10]</span>
+           ╱   ╲     ╱   ╲     ╱   ╲
+         <span class="accent">[38] [27] [43]  [3]  [9] [82]</span>  [10]
+           ╲   ╱     ╲   ╱     ╲   ╱
+          <span style="color:var(--cyan)">[27  38]</span>   <span style="color:var(--cyan)">[3  43]</span>   <span style="color:var(--cyan)">[9  82]</span>   <span style="color:var(--cyan)">[10]</span>
+                ╲       ╱             ╲       ╱
+           <span style="color:var(--accent2)">[3  27  38  43]</span>        <span style="color:var(--accent2)">[9  10  82]</span>
+                        ╲              ╱
+                  <span style="color:var(--green);font-weight:700">[3  9  10  27  38  43  82]</span>
+    </pre>
+  </div>
+  <div class="formula">
+    <span class="label">Mergesort Recurrence</span>
+    T(n) = 2T(n/2) + Θ(n)  →  <strong>Θ(n log n)</strong>
+  </div>
+</div>
+
+<h3>Max Subarray <span class="dim">(from Slide 021)</span></h3>
+<div class="card example">
+  <span class="card-label ex">📐 Slide Example</span>
+  <p><strong>Key idea:</strong> The max subarray is either entirely in the left half, entirely in the right half, or <em>crosses the dividing line</em>.</p>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:13px;">
+          [20  -7  12  -5  -22]
+
+            left     |    right
+          [20  -7]   |  [12  -5  -22]
+                     │
+                 <span style="color:var(--orange)">dividing line</span>
+
+  <span class="cm">Check 3 cases: max(leftSol, rightSol, crossingSol)</span>
+  <span class="cm">The crossing solution scans outward from midpoint: Θ(n)</span>
+    </pre>
+  </div>
+  <p>T(n) = 2T(n/2) + Θ(n) → <strong>Θ(n log n)</strong></p>
+</div>
+
+<hr>
+<h2 id="recurrences">Topic 9: Solving Recurrences</h2>
+
+<h3>Method 1: Direct Iteration <span class="dim">(PS3)</span></h3>
+<div class="card example">
+  <span class="card-label hw">📝 PS3 — Direct Solve: T(n) = 2T(n−1) + 1</span>
+  <pre>
+  T(n) = 2T(n-1) + 1
+       = 2(2T(n-2) + 1) + 1  =  4T(n-2) + 3
+       = 4(2T(n-3) + 1) + 3  =  8T(n-3) + 7
+       ...
+       = 2<sup>d</sup> T(n-d) + (2<sup>d</sup> - 1)
+
+  <span class="cm">Set d = n-1 to reach base case T(1):</span>
+       = 2<sup>n-1</sup> · T(1) + 2<sup>n-1</sup> - 1
+       = 2<sup>n-1</sup> + 2<sup>n-1</sup> - 1
+       ∈ <span style="color:var(--yellow); font-weight:700">Θ(2ⁿ)</span>
+  </pre>
+</div>
+
+<h3>Method 2: Substitution (Guess & Check) <span class="dim">(PS3)</span></h3>
+<div class="card example">
+  <span class="card-label hw">📝 PS3 — Substitution: T(n) = T(n/2) + n, guess T(n) = O(n)</span>
+  <p><strong>Prove:</strong> T(n) ≤ cn for some c, n ≥ n₀</p>
+  <pre>
+  T(n) = T(n/2) + n
+       ≤ c(n/2) + n         <span class="cm">// apply inductive hypothesis</span>
+       = n(c/2 + 1)
+       ≤ cn                 <span class="cm">// need c/2 + 1 ≤ c → c ≥ 2  ✓</span>
+  </pre>
+  <p>With c = 2, the proof holds for all n ≥ 1. ∎</p>
+</div>
+
+<div class="card warning">
+  <span class="card-label warn">⚠️ Substitution Pitfall (from Slide 022)</span>
+  <p>For T(n) = 2T(n/2) + n, guessing T(n) ≤ <strong>cn</strong> FAILS:</p>
+  <pre>
+  T(n) ≤ 2·c(n/2) + n = cn + n    <span class="cm">// can't show ≤ cn!</span>
+  </pre>
+  <p>You need a <strong>tighter guess</strong>: T(n) ≤ cn log n, which does work.</p>
+</div>
+
+<h3>Method 3: Recursion Tree <span class="dim">(from Slide 022)</span></h3>
+<div class="card visual">
+  <span class="card-label vis">🌳 Recursion Tree for T(n) = 2T(n/2) + n</span>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:13px;">
+<span class="cm">Level    Work at this level    Subproblems</span>
+
+  0         <span style="color:var(--yellow)">n</span>                  1 problem of size n
+            ╱╲
+  1       <span style="color:var(--yellow)">n/2</span>  <span style="color:var(--yellow)">n/2</span>             2 problems of size n/2    total: <span style="color:var(--yellow)">n</span>
+          ╱╲    ╱╲
+  2     <span style="color:var(--yellow)">n/4</span> <span style="color:var(--yellow)">n/4</span> <span style="color:var(--yellow)">n/4</span> <span style="color:var(--yellow)">n/4</span>       4 problems of size n/4    total: <span style="color:var(--yellow)">n</span>
+        ...  ...  ...  ...
+  ...     ...                                              total: <span style="color:var(--yellow)">n</span>
+
+ log₂n   <span style="color:var(--green)">1 1 1 ... 1</span>           n problems of size 1      total: <span style="color:var(--yellow)">n</span>
+
+
+<span class="cm">  Total = n per level × log₂n levels = </span><span style="color:var(--yellow);font-weight:700">Θ(n log n)</span>
+    </pre>
+  </div>
+</div>
+
+<hr>
+<h2 id="master">Topic 10: Master Theorem</h2>
+
+<div class="formula">
+  <span class="label">Master Theorem Setup</span>
+  T(n) = a · T(n/b) + f(n)  &nbsp;&nbsp;&nbsp;&nbsp;  Let k = log<sub>b</sub>(a)
+</div>
+
+<table>
+  <tr><th>Case</th><th>Condition</th><th>Result</th><th>Intuition</th></tr>
+  <tr><td><strong>Case 1</strong></td><td>f(n) polynomially < nᵏ</td><td><span class="tag theta">Θ(nᵏ)</span></td><td>Leaves dominate</td></tr>
+  <tr><td><strong>Case 2</strong></td><td>f(n) = Θ(nᵏ)</td><td><span class="tag theta">Θ(nᵏ log n)</span></td><td>Even split</td></tr>
+  <tr><td><strong>Case 3</strong></td><td>f(n) polynomially > nᵏ</td><td><span class="tag theta">Θ(f(n))</span></td><td>Root dominates</td></tr>
+</table>
+
+<h3>Worked Examples <span class="dim">(from PS4 Solution)</span></h3>
+<div class="card example">
+  <span class="card-label hw">📝 PS4 — Master Theorem Problems</span>
+
+  <h4>1. T(n) = 4T(n/3) + n²</h4>
+  <pre>
+  k = log₃(4) ≈ 1.26      nᵏ = n<sup>1.26</sup>
+  f(n) = n²               n² grows <span class="green">faster</span> than n<sup>1.26</sup>
+  → <span style="color:var(--yellow)">Case 3: Θ(n²)</span>
+  </pre>
+
+  <h4>2. T(n) = 27T(n/3) + n²</h4>
+  <pre>
+  k = log₃(27) = 3        nᵏ = n³
+  f(n) = n²               n³ grows <span class="green">faster</span> than n²
+  → <span style="color:var(--yellow)">Case 1: Θ(n³)</span>
+  </pre>
+
+  <h4>3. T(n) = 4T(n/2) + n²</h4>
+  <pre>
+  k = log₂(4) = 2         nᵏ = n²
+  f(n) = n²               nᵏ <span class="green">= f(n)</span>
+  → <span style="color:var(--yellow)">Case 2: Θ(n² log n)</span>
+  </pre>
+
+  <h4 style="color:var(--red)">4. T(n) = 3T(n/3) + n log n  ⚠️ NO CASE APPLIES</h4>
+  <pre>
+  k = log₃(3) = 1         nᵏ = n
+  f(n) = n log n           <span class="red">Differs by only a log factor, not polynomial!</span>
+  → <span style="color:var(--red)">Master Theorem does NOT apply</span>
+  </pre>
+
+  <h4>5. T(n) = 3T(n/4) + n log n</h4>
+  <pre>
+  k = log₄(3) ≈ 0.79      nᵏ = n<sup>0.79</sup>
+  f(n) = n log n           n log n grows <span class="green">faster</span> than n<sup>0.79</sup>
+  → <span style="color:var(--yellow)">Case 3: Θ(n log n)</span>
+  </pre>
+</div>
+
+<hr>
+<h2 id="karatsuba">Topic 11: Karatsuba Multiplication</h2>
+
+<h3>The Setup</h3>
+<p>Multiply two n-digit numbers x and y. Split each into halves:</p>
+
+<div class="diagram">
+  <pre style="color:var(--text); font-size:14px;">
+     x = 10<sup>n/2</sup> · <span style="color:var(--green)">A</span> + <span style="color:var(--green)">B</span>        y = 10<sup>n/2</sup> · <span style="color:var(--accent)">C</span> + <span style="color:var(--accent)">D</span>
+
+     x · y = 10<sup>n</sup>(<span style="color:var(--green)">A</span><span style="color:var(--accent)">C</span>) + 10<sup>n/2</sup>(<span style="color:var(--green)">A</span><span style="color:var(--accent)">D</span> + <span style="color:var(--green)">B</span><span style="color:var(--accent)">C</span>) + <span style="color:var(--green)">B</span><span style="color:var(--accent)">D</span>
+  </pre>
+</div>
+
+<h3>Naive vs Karatsuba — Side by Side</h3>
+<div style="display:flex; gap:20px; flex-wrap:wrap;">
+  <div class="card" style="flex:1; min-width:280px; border-left:3px solid var(--red);">
+    <h4 style="color:var(--red)">Naive: 4 Multiplications</h4>
+    <p>Compute AC, AD, BC, BD separately</p>
+    <div class="formula" style="border-color:var(--red)">
+      T(n) = <span style="color:var(--red)">4</span>T(n/2) + 5n<br>
+      k = log₂(4) = 2 → Case 1: <strong>Θ(n²)</strong><br>
+      <span class="dim">No improvement over grade school!</span>
+    </div>
+  </div>
+  <div class="card" style="flex:1; min-width:280px; border-left:3px solid var(--green);">
+    <h4 style="color:var(--green)">Karatsuba: 3 Multiplications</h4>
+    <p>Compute AC, BD, (A+B)(C+D)<br>
+    Then: AD+BC = (A+B)(C+D) − AC − BD</p>
+    <div class="formula" style="border-color:var(--green)">
+      T(n) = <span style="color:var(--green)">3</span>T(n/2) + 8n<br>
+      k = log₂(3) ≈ 1.585 → Case 1: <strong>Θ(n<sup>1.585</sup>)</strong><br>
+      <span style="color:var(--green)">Faster!</span>
+    </div>
+  </div>
+</div>
+
+<div class="card warning">
+  <span class="card-label warn">💡 Big Takeaway</span>
+  <p>By analyzing the recurrence with the Master Theorem, you can see that <strong>eliminating even one recursive call</strong> (4→3) drops the exponent significantly. This is the core Karatsuba insight.</p>
+</div>
+
+<hr>
+<h2 id="closest">Topic 12: Closest Pair of Points</h2>
+
+<h3>Algorithm Walkthrough</h3>
+<div class="card visual">
+  <span class="card-label vis">📍 Closest Pair — Full Visual (from Slide 024)</span>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:13px;">
+<span class="cm">Step 1: Divide at median x-coordinate</span>
+
+    ·1                          ·2
+         ·5          ·7
+    ·3          ·6         ·4
+                     ·8
+  ─────────── │ ───────────
+  LeftPoints  │  RightPoints
+
+<span class="cm">Step 2: Conquer — recurse on each half</span>
+
+    δ_L = closest pair in left
+    δ_R = closest pair in right
+    δ = min(δ_L, δ_R)
+
+<span class="cm">Step 3: Combine — check the "runway" (strip)</span>
+
+               <span style="color:var(--orange)">│←──── 2δ ────→│</span>
+               <span style="color:var(--orange)">│   RUNWAY     │</span>
+    ·          <span style="color:var(--orange)">│  ·5     ·7   │</span>         ·
+               <span style="color:var(--orange)">│       ·6     │</span>
+    ·          <span style="color:var(--orange)">│              │</span>    ·
+               <span style="color:var(--orange)">│     ·8       │</span>
+  ─────────────┼──────────────┼──────────
+               <span style="color:var(--orange)">│              │</span>
+
+  For each point in the runway, compare to
+  the <span style="color:var(--yellow);font-weight:700">next 7 points above</span> (sorted by y).
+  <span class="dim">Why only 7? Geometric packing argument:
+  at most ~8 points fit in a 2δ×δ box.</span>
+    </pre>
+  </div>
+</div>
+
+<div class="formula">
+  <span class="label">Closest Pair Recurrence</span>
+  T(n) = 2T(n/2) + Θ(n) → Case 2: <strong>Θ(n log n)</strong>
+</div>
+
+<div class="card warning">
+  <span class="card-label warn">⚠️ Critical Optimization</span>
+  <p><strong>Don't re-sort the runway by y each time!</strong> That gives T(n) = 2T(n/2) + Θ(n log n) → Θ(n log²n).</p>
+  <p><strong>Instead:</strong> Each recursive call also returns points sorted by y. In the combine step, <em>merge</em> the two y-sorted lists (like mergesort). This keeps combine at Θ(n).</p>
+</div>
+
+<hr>
+<h2 id="quickselect">Topic 13: Quickselect & Median of Medians</h2>
+
+<h3>Quickselect <span class="dim">(from Slide 025)</span></h3>
+<div class="card visual">
+  <span class="card-label vis">🎯 Quickselect Example — find 4th order statistic</span>
+  <div class="diagram">
+    <pre style="color:var(--text); font-size:13px;">
+<span class="cm">Array: [2, 5, 7, 3, 6, 4, 1, <span style="color:var(--yellow)">8</span>, 10, 9, 11, 12]</span>
+<span class="cm">Pivot = 8, partition around it:</span>
+
+  [2  5  7  3  6  4  1] <span style="color:var(--yellow);font-weight:700"> 8 </span> [10  9  11  12]
+  position: 0-6          <span style="color:var(--yellow)">7</span>     8-11
+
+  <span class="cm">Looking for i=4 (4th smallest):</span>
+  <span style="color:var(--green)">Since 4 < 7 (pivot position), recurse LEFT only</span>
+
+  <span class="cm">Looking for i=7:</span>
+  <span style="color:var(--yellow)">Since 7 == 7, return pivot (8) — FOUND!</span>
+
+  <span class="cm">Looking for i=10:</span>
+  <span style="color:var(--accent)">Since 10 > 7, recurse RIGHT with i = 10 - 7 - 1 = 2</span>
+    </pre>
+  </div>
+</div>
+
+<table>
+  <tr><th>Scenario</th><th>Recurrence</th><th>Runtime</th></tr>
+  <tr><td>Best (median pivot)</td><td>S(n) = S(n/2) + n</td><td><span class="tag theta">Θ(n)</span></td></tr>
+  <tr><td>Worst (extreme pivot)</td><td>S(n) = S(n−1) + n</td><td><span class="tag theta">Θ(n²)</span></td></tr>
+</table>
+
+<h3>Median of Medians — Guaranteeing a Good Pivot</h3>
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-title">Chunk</div>
+    <div class="step-desc">Break list into groups of 5</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-title">Local Medians</div>
+    <div class="step-desc">Find median of each group (insertion sort, constant time per group)</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-title">Recurse</div>
+    <div class="step-desc">Call Quickselect on the list of medians to find <em>their</em> median</div>
+  </div>
+</div>
+
+<p>This pivot is guaranteed to be within the <strong>middle 40%</strong> of the sorted list. Worst case, you recurse on 70% of the elements.</p>
+
+<h3>Full Runtime Derivation <span class="dim">(from Slide 025)</span></h3>
+<div class="card example">
+  <span class="card-label ex">📐 Quickselect + Median of Medians Runtime</span>
+  <pre>
+<span class="cm">Median of Medians runtime:</span>
+  M(n) = S(n/5) + Θ(n)
+
+<span class="cm">Quickselect with MoM:</span>
+  S(n) ≤ S(<span style="color:var(--yellow)">7n/10</span>) + M(n) + Θ(n)
+       = S(7n/10) + S(n/5) + Θ(n)
+
+<span class="cm">Prove S(n) ≤ 10cn by induction:</span>
+
+  S(n) = S(n/5) + S(7n/10) + cn
+       ≤ 10c(n/5) + 10c(7n/10) + cn     <span class="cm">// inductive hypothesis</span>
+       = 2cn + 7cn + cn
+       = <span style="color:var(--yellow);font-weight:700">10cn</span>                             <span class="cm">// exactly what we needed!  ✓</span>
+
+  Therefore: <span style="color:var(--yellow);font-weight:700">S(n) = Θ(n)</span>  — linear time!
+  </pre>
+</div>
+
+<div class="card warning">
+  <span class="card-label warn">💡 Practical Note (from Slide 025)</span>
+  <p>Median of Medians has large constants. In practice, just use a <strong>random pivot</strong> for Quicksort — it's fast (random() is cheap), and the expected runtime is Θ(n log n) because unbalanced partitions are very unlikely. If you need guaranteed Θ(n log n), use Mergesort instead.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- CHECKLIST -->
+<!-- ============================================================ -->
+<hr>
+<h2 id="checklist">Practice Checklist</h2>
+
+<h3>Review (Both Quizzes)</h3>
+<ul class="checklist">
+  <li>Prove f(n) ∈ O(g(n)) using direct proof (find c, n₀)</li>
+  <li>Prove f(n) ∉ O(g(n)) using proof by contradiction</li>
+  <li>Use the limit method to classify into O, Ω, Θ, o, ω</li>
+  <li>Know the growth hierarchy: 1 < log n < √n < n < n log n < n² < 2ⁿ < n!</li>
+  <li>Remember: log bases don't matter, polynomials lose to exponentials, logs lose to polynomials</li>
+</ul>
+
+<h3>Quiz 1: Graphs</h3>
+<ul class="checklist">
+  <li>Convert between adjacency matrix and adjacency list (including weighted)</li>
+  <li>Trace BFS: visit order, distances, BFS tree</li>
+  <li>Detect bipartiteness via BFS layer parity</li>
+  <li>Trace DFS: record discovery/finish times for every node</li>
+  <li>Classify every edge as tree, back, forward, or cross using timestamps</li>
+  <li>Detect cycles via back edges in DFS</li>
+  <li>Perform topological sort using reverse finish times</li>
+  <li>Execute Kosaraju-Sharir SCC algorithm step by step</li>
+  <li>Explain why the "same G, increasing finish time" SCC variant fails (PS2)</li>
+  <li>Design the O(|V|) universal sink algorithm (PS2)</li>
+</ul>
+
+<h3>Quiz 2: Divide & Conquer</h3>
+<ul class="checklist">
+  <li>Write a recurrence relation for any D&C algorithm</li>
+  <li>Solve recurrences: direct iteration, substitution, recursion tree, Master Theorem</li>
+  <li>Apply Master Theorem: compute k = log_b(a), compare nᵏ to f(n), identify case</li>
+  <li>Recognize when Master Theorem does NOT apply (log-factor gap only)</li>
+  <li>Explain Karatsuba's trick: why 4→3 multiplications improves runtime</li>
+  <li>Walk through Closest Pair including the strip/runway with 7 comparisons</li>
+  <li>Explain the y-sort merge optimization for Closest Pair</li>
+  <li>Trace Quickselect on an array for a given order statistic</li>
+  <li>Explain Median of Medians and derive the full S(n) recurrence</li>
+  <li>Prove S(n) = Θ(n) for Quickselect+MoM by induction</li>
+  <li>Do substitution method proofs correctly (avoid the cn pitfall)</li>
+</ul>
+
+<div class="spacer"></div>
+<p class="dim" style="text-align:center; font-size:13px;">Good luck! — Built from slides 00Review, 011, 012, 021–025 and PS1–PS4 solutions</p>
+
+</div>
+</body>
+</html>
