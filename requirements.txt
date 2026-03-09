@@ -9,4 +9,4 @@ torch #CNN model
 torchvision
 Pillow #Image processing
 mediapipe
-
+cv2
