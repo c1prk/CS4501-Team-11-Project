@@ -1,14 +1,8 @@
 import cv2
 import os
-import mediapipe as mp
-import numpy as np
-
+from collections import defaultdict
 
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
-#indices for left and right eye centers
-LEFT_EYE  = 33
-RIGHT_EYE = 263
 
 def get_project_root():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -57,13 +51,59 @@ def extract_frames(video_path, output_folder):
     cap.release()
     print(f"Done: {video_name} — {saved_count} frames saved")
 
+
+def create_splits(project_root):
+    manipulation_types = [
+        "DeepFakeDetection",
+        "Deepfakes",
+        "Face2Face",
+        "FaceShifter",
+        "FaceSwap",
+        "NeuralTextures"
+    ]
+    original_sources = ["actors", "youtube"]
+
+    splits_folder = os.path.join(project_root, "data", "splits")
+    os.makedirs(splits_folder, exist_ok=True)
+    for split in ["train.txt", "val.txt", "test.txt"]:
+        open(os.path.join(splits_folder, split), "w").close()
+
+    folders = []
+    for manip_type in manipulation_types:
+        folders.append(os.path.join(project_root, "data", "processed", "manipulated_frames", manip_type))
+    for source in original_sources:
+        folders.append(os.path.join(project_root, "data", "processed", "original_frames", source))
+
+    for folder in folders:
+        if not os.path.exists(folder):
+            print(f"Skipping {folder} — not found")
+            continue
+
+        # Group frames by video name
+        video_frames = defaultdict(list)
+        for filename in sorted(os.listdir(folder)):
+            if filename.endswith(".jpg"):
+                video_name = filename.split("_frame_")[0]
+                video_frames[video_name].append(filename)
+
+        # Sort and slice video names
+        video_names = sorted(video_frames.keys())
+        train_videos = video_names[:140]
+        val_videos   = video_names[140:170]
+        test_videos  = video_names[170:200]
+
+        # Write frame filenames to split files
+        for split_name, split_videos in [("train.txt", train_videos), ("val.txt", val_videos), ("test.txt", test_videos)]:
+            with open(os.path.join(splits_folder, split_name), "a") as f:
+                for video in split_videos:
+                    for filename in video_frames[video]:
+                        f.write(filename + "\n")
+
+        print(f"Split done: {os.path.basename(folder)} — {len(train_videos)} train, {len(val_videos)} val, {len(test_videos)} test videos")
+    
 def main():
     project_root = get_project_root()
-    video_path = os.path.join(project_root, "data", "raw", "manipulated_sequences", "Deepfakes", "c23", "videos", "000_003.mp4")
-    output_folder = os.path.join(project_root, "data", "processed", "manipulated_frames", "Deepfakes")
-    
-    extract_frames(video_path, output_folder)
-    '''print(f"Project root: {project_root}")
+    print(f"Project root: {project_root}")
     original_sequences = [
         "actors",
         "youtube"
@@ -78,7 +118,7 @@ def main():
     ]
 
     for manip_type in manipulation_types:
-        videos_folder = os.path.join(project_root, "data", "raw", "manipulation_types", manip_type, "c23", "videos")
+        videos_folder = os.path.join(project_root, "data", "raw", "manipulated_sequences", manip_type, "c23", "videos")
         output_folder = os.path.join(project_root, "data", "processed", "manipulated_frames", manip_type)
 
         print(f"Output folder: {output_folder}")
@@ -87,7 +127,7 @@ def main():
             print(f"Skipping {manip_type} — folder not found")
             continue
 
-        all_videos = [f for f in os.listdir(videos_folder) if f.endswith(".mp4")]
+        all_videos = sorted([f for f in os.listdir(videos_folder) if f.endswith(".mp4")])
         selected_videos = all_videos[:200]
 
         print(f"\nProcessing {len(selected_videos)} videos from {manip_type}...")
@@ -107,7 +147,7 @@ def main():
             print(f"Skipping {original_sequence} — folder not found")
             continue
 
-        all_videos = [f for f in os.listdir(videos_folder) if f.endswith(".mp4")]
+        all_videos = sorted([f for f in os.listdir(videos_folder) if f.endswith(".mp4")])
         selected_videos = all_videos[:200]
 
         print(f"\nProcessing {len(selected_videos)} videos from {original_sequence}...")
@@ -116,7 +156,8 @@ def main():
             video_path = os.path.join(videos_folder, video_file)
             extract_frames(video_path, output_folder)
 
-        print(f"{original_sequence} complete!")'''
+        print(f"{original_sequence} complete!")
+    create_splits(project_root)
 
 if __name__ == "__main__":
     main()
