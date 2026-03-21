@@ -3,25 +3,21 @@ import sys
 import cv2
 import pandas as pd
 
-# --- SYSTEM PATH FIX ---
+#system path fix 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.append(parent_dir)
 
 from sift_extractor import get_asymmetry_score
 
-# --- CONFIGURATION ---
+#config
 BASE_DIR = os.path.abspath(os.path.join(current_dir, "../../../"))
 BASE_DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
 TEST_SPLIT_FILE = os.path.join(BASE_DIR, "data", "splits", "test.txt")
 OUTPUT_CSV = os.path.join(BASE_DIR, "asymmetry_results_full.csv")
 
 def run_full_experiment(samples_per_category=50):
-    """
-    This script loops through EVERY folder in data/processed and 
-    runs the Harris-SIFT analysis on images listed in test.txt.
-    """
-    print("--- Starting Full Scale Asymmetry Experiment ---")
+    print("Running full asymmetry experiment...")
 
     if not os.path.exists(TEST_SPLIT_FILE):
         print(f"Error: Split file not found at {TEST_SPLIT_FILE}")

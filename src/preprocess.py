@@ -51,7 +51,6 @@ def extract_frames(video_path, output_folder):
     cap.release()
     print(f"Done: {video_name} — {saved_count} frames saved")
 
-
 def create_splits(project_root):
     manipulation_types = [
         "DeepFakeDetection",
