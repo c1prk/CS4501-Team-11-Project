@@ -77,6 +77,10 @@ def get_asymmetry_score(image_path):
     # If one side has no detectable texture, we assume it's totally asymmetrical
     if des_l is None or des_r is None:
         return 1.0 
+
+    # FIX: knnMatch(k=2) crashes if either side has fewer than 2 descriptors
+    if len(des_l) < 2 or len(des_r) < 2:
+        return 1.0
     
     # Use Brute Force Matcher to find similar textures
     bf = cv2.BFMatcher()
