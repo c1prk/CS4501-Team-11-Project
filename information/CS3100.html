@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 3100 — Greedy Algorithms Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-card: #181b24;
+  --bg-card-hover: #1e2230;
+  --bg-code: #12141c;
+  --border: #2a2e3a;
+  --border-accent: #3d4455;
+  --text: #c8cdd8;
+  --text-bright: #e8ecf4;
+  --text-dim: #6b7280;
+  --accent: #f0a050;
+  --accent-dim: #c07830;
+  --accent2: #50b8e0;
+  --accent3: #60d898;
+  --accent4: #e06080;
+  --accent5: #a878e8;
+  --correct: #48c878;
+  --wrong: #e05858;
+  --nav-width: 260px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+
+/* ══════════ NAV ══════════ */
+nav {
+  position: fixed; top: 0; left: 0;
+  width: var(--nav-width); height: 100vh;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  overflow-y: auto; z-index: 100;
+  padding: 28px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  transition: transform var(--transition);
+}
+nav.collapsed { transform: translateX(-100%); }
+nav .brand {
+  padding: 0 24px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+nav .brand h1 {
+  font-family: 'Crimson Pro', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+nav .brand p {
+  font-size: 11px; color: var(--text-dim);
+  margin-top: 4px; text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+nav a {
+  display: block; padding: 8px 24px;
+  color: var(--text-dim); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+}
+nav a:hover { color: var(--text-bright); background: rgba(240,160,80,0.05); }
+nav a.active {
+  color: var(--accent); border-left-color: var(--accent);
+  background: rgba(240,160,80,0.08);
+}
+nav a.sub { padding-left: 40px; font-size: 12px; }
+nav .nav-section {
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--text-dim);
+  padding: 16px 24px 6px; opacity: 0.6;
+}
+
+.menu-toggle {
+  display: none; position: fixed; top: 16px; left: 16px;
+  z-index: 200; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--accent); width: 40px; height: 40px;
+  font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ══════════ MAIN ══════════ */
+main {
+  margin-left: var(--nav-width);
+  padding: 48px 56px 120px;
+  max-width: 900px;
+  transition: margin var(--transition);
+}
+
+/* ══════════ TYPOGRAPHY ══════════ */
+h2 {
+  font-family: 'Crimson Pro', serif;
+  font-size: 32px; font-weight: 700;
+  color: var(--text-bright);
+  margin: 64px 0 8px;
+  padding-top: 24px;
+  letter-spacing: -0.5px;
+  position: relative;
+}
+h2::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 48px; height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+h2:first-of-type { margin-top: 0; }
+
+h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--accent2);
+  margin: 36px 0 12px;
+}
+
+h4 {
+  font-size: 15px; font-weight: 700;
+  color: var(--accent);
+  margin: 24px 0 8px;
+}
+
+p { margin: 10px 0; }
+
+strong { color: var(--text-bright); font-weight: 600; }
+
+em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+/* ══════════ CARDS ══════════ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 20px 0;
+  transition: border-color var(--transition);
+}
+.card:hover { border-color: var(--border-accent); }
+
+.card.accent { border-left: 4px solid var(--accent); }
+.card.blue { border-left: 4px solid var(--accent2); }
+.card.green { border-left: 4px solid var(--accent3); }
+.card.red { border-left: 4px solid var(--accent4); }
+.card.purple { border-left: 4px solid var(--accent5); }
+
+.card-label {
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 12px;
+  font-weight: 700;
+}
+.card.accent .card-label { color: var(--accent); }
+.card.blue .card-label { color: var(--accent2); }
+.card.green .card-label { color: var(--accent3); }
+.card.red .card-label { color: var(--accent4); }
+.card.purple .card-label { color: var(--accent5); }
+
+/* ══════════ CODE ══════════ */
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 22px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text);
+  margin: 14px 0;
+}
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  background: var(--bg-code);
+  padding: 2px 7px;
+  border-radius: 4px;
+  color: var(--accent2);
+}
+pre code { background: none; padding: 0; }
+
+.kw { color: var(--accent4); }
+.fn { color: var(--accent2); }
+.cm { color: var(--text-dim); font-style: italic; }
+.num { color: var(--accent3); }
+.str { color: var(--accent); }
+
+/* ══════════ TABLES ══════════ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13.5px;
+}
+th {
+  background: var(--bg-code);
+  color: var(--accent);
+  font-weight: 600; text-align: left;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+td {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
+
+/* ══════════ COLLAPSIBLE ══════════ */
+details {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 14px 0;
+  overflow: hidden;
+}
+summary {
+  padding: 14px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-bright);
+  font-size: 14px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background var(--transition);
+}
+summary:hover { background: var(--bg-card-hover); }
+summary::before {
+  content: '▸'; color: var(--accent);
+  font-size: 12px;
+  transition: transform var(--transition);
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .inner { padding: 4px 20px 20px; }
+
+/* ══════════ T/F QUIZ ══════════ */
+.tf-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 12px 0;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.tf-item:hover { border-color: var(--border-accent); }
+.tf-q { font-weight: 600; color: var(--text-bright); margin-bottom: 8px; font-size: 14px; }
+.tf-btns { display: flex; gap: 8px; margin: 10px 0; }
+.tf-btn {
+  padding: 6px 20px; border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: transparent; color: var(--text);
+  transition: all var(--transition);
+}
+.tf-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tf-btn.selected-true { background: var(--correct); color: #000; border-color: var(--correct); }
+.tf-btn.selected-false { background: var(--wrong); color: #fff; border-color: var(--wrong); }
+.tf-btn.correct-highlight { background: var(--correct); color: #000; border-color: var(--correct); }
+.tf-explain {
+  margin-top: 10px; padding: 12px 16px;
+  border-radius: 8px; font-size: 13px;
+  line-height: 1.6; display: none;
+}
+.tf-explain.show { display: block; }
+.tf-explain.right { background: rgba(72,200,120,0.1); border: 1px solid rgba(72,200,120,0.2); color: var(--accent3); }
+.tf-explain.wrong { background: rgba(224,88,88,0.1); border: 1px solid rgba(224,88,88,0.2); color: var(--accent4); }
+
+/* ══════════ PROOF STEPS ══════════ */
+.proof-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 10px 16px; margin: 6px 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13.5px;
+}
+.step-num {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 11px;
+  min-width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ══════════ ALGO GRAPH (ASCII) ══════════ */
+.graph-box {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  white-space: pre;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 14px 0;
+  color: var(--text);
+}
+
+/* ══════════ TAGS ══════════ */
+.tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 3px 10px; border-radius: 4px;
+  margin-right: 6px;
+}
+.tag.runtime { background: rgba(168,120,232,0.15); color: var(--accent5); }
+.tag.proof { background: rgba(80,184,224,0.15); color: var(--accent2); }
+.tag.algo { background: rgba(96,216,152,0.15); color: var(--accent3); }
+.tag.warn { background: rgba(224,96,128,0.15); color: var(--accent4); }
+
+/* ══════════ COMPARISON GRID ══════════ */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+.compare-grid .card { margin: 0; }
+
+/* ══════════ RESPONSIVE ══════════ */
+@media (max-width: 900px) {
+  nav { transform: translateX(-100%); }
+  nav.open { transform: translateX(0); box-shadow: 8px 0 32px rgba(0,0,0,0.5); }
+  .menu-toggle { display: flex; }
+  main { margin-left: 0; padding: 56px 24px 100px; }
+  .compare-grid { grid-template-columns: 1fr; }
+}
+
+/* ══════════ ANIMATION ══════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate { animation: fadeUp 0.5s ease both; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<nav id="sidenav">
+  <div class="brand">
+    <h1>Greedy Algorithms</h1>
+    <p>CS 3100 &bull; Quiz 3 Guide</p>
+  </div>
+
+  <div class="nav-section">Framework</div>
+  <a href="#framework">Greedy Framework</a>
+  <a href="#proof-patterns" class="sub">Proof Patterns</a>
+
+  <div class="nav-section">Algorithms</div>
+  <a href="#coin-change">Coin Change</a>
+  <a href="#dijkstra">Dijkstra's Algorithm</a>
+  <a href="#prims">Prim's Algorithm</a>
+  <a href="#kruskals">Kruskal's Algorithm</a>
+  <a href="#activity">Activity Selection</a>
+  <a href="#knapsack">Fractional Knapsack</a>
+  <a href="#bridge">Bridge Crossing</a>
+
+  <div class="nav-section">Analysis</div>
+  <a href="#runtime">Runtime Analysis</a>
+  <a href="#comparisons">Algorithm Comparisons</a>
+
+  <div class="nav-section">Proofs</div>
+  <a href="#proofs-os">Optimal Substructure</a>
+  <a href="#proofs-gcp">Greedy Choice Property</a>
+
+  <div class="nav-section">Practice</div>
+  <a href="#practice-dijkstra">Practice: Dijkstra's</a>
+  <a href="#practice-mst">Practice: MST</a>
+  <a href="#tf-quiz">True / False Quiz</a>
+  <a href="#pitfalls">Pitfalls & Counterexamples</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="framework">The Greedy Framework</h2>
+
+<p>A <strong>greedy algorithm</strong> solves an optimization problem by making a locally optimal choice at each step to extend the current solution. It <strong>never backtracks</strong>. Greedy is not always correct — it must be proven for each problem.</p>
+
+<div class="card accent">
+  <div class="card-label">Two Required Properties</div>
+  <p><strong>Optimal Substructure:</strong> An optimal solution to the whole problem contains optimal solutions to its subproblems.</p>
+  <p><strong>Greedy Choice Property:</strong> The greedy choice made at each step is part of <em>some</em> optimal solution.</p>
+  <p style="margin-top:14px;color:var(--text-dim);font-size:13px;">
+    ⚠️ Optimal substructure alone is <strong>necessary but not sufficient</strong>. Both properties must hold.<br>
+    ⚠️ If greedy works → problem has optimal substructure (converse of Lemma 1).<br>
+    ⚠️ Optimal substructure does NOT work "the other way" — you cannot split arbitrarily and combine optimal sub-solutions.
+  </p>
+</div>
+
+<h3 id="proof-patterns">Proof Templates</h3>
+
+<h4>Optimal Substructure — Contradiction Template</h4>
+<div class="proof-step"><span class="step-num">1</span><span>State: "If WHOLE is optimal, then PART is optimal for SUBPROBLEM"</span></div>
+<div class="proof-step"><span class="step-num">2</span><span>Assume for contradiction: WHOLE is optimal, but PART is NOT optimal</span></div>
+<div class="proof-step"><span class="step-num">3</span><span>Since PART is not optimal, ∃ BETTER_PART with strictly better objective value</span></div>
+<div class="proof-step"><span class="step-num">4</span><span>Construct WHOLE' = REMAINING + BETTER_PART</span></div>
+<div class="proof-step"><span class="step-num">5</span><span>Show WHOLE' has better objective value than WHOLE → contradiction</span></div>
+<div class="proof-step"><span class="step-num">6</span><span>Therefore PART must be optimal for the subproblem ∎</span></div>
+
+<h4>Greedy Choice Property — Exchange Argument Template</h4>
+<div class="proof-step"><span class="step-num">1</span><span>State: "Greedy choice G must be in some optimal solution"</span></div>
+<div class="proof-step"><span class="step-num">2</span><span>Assume for contradiction: G ∉ optimal solution O = {o₁, o₂, …, oₙ}</span></div>
+<div class="proof-step"><span class="step-num">3</span><span>Identify element oⱼ in O that can be <strong>exchanged</strong> for G</span></div>
+<div class="proof-step"><span class="step-num">4</span><span>Show O' = O − {oⱼ} + {G} is still feasible and value(O') ≥ value(O)</span></div>
+<div class="proof-step"><span class="step-num">5</span><span>O' is optimal and contains G → contradiction ∎</span></div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="coin-change">Coin Change</h2>
+
+<p>Given denominations D = {d₁, d₂, …, dₖ} and target A cents, find the <strong>minimum number of coins</strong> summing to A.</p>
+
+<div class="card green">
+  <div class="card-label">Algorithm</div>
+<pre><code><span class="kw">denom</span> = [25, 10, 5, 1]  <span class="cm">// sorted descending</span>
+<span class="fn">makeChange</span>(cents):
+    <span class="kw">for each</span> coin <span class="kw">in</span> denom:
+        <span class="kw">while</span> coin &lt;= cents:
+            sol.append(coin)
+            cents -= coin
+    <span class="kw">return</span> sol</code></pre>
+  <p><span class="tag runtime">Runtime</span> Θ(A / min_denomination) — linear in number of coins produced</p>
+</div>
+
+<div class="card red">
+  <div class="card-label">When Greedy Fails</div>
+  <p>Denominations <code>{1, 6, 10, 25}</code>, A = 12:</p>
+  <p>Greedy: 10+1+1 = <strong>3 coins</strong>. Optimal: 6+6 = <strong>2 coins</strong>.</p>
+  <p style="font-size:13px;color:var(--text-dim);margin-top:8px;">The proof fails at the dime case: two 6¢ coins cannot be replaced by one 10¢ coin. The greedy choice property does NOT hold for this denomination set.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="dijkstra">Dijkstra's Algorithm</h2>
+
+<p><span class="tag algo">Single-Source Shortest Paths</span> Given a weighted graph with <strong>no negative edge weights</strong> and start node s, find shortest paths from s to all other nodes.</p>
+
+<h3>Three Groups of Nodes</h3>
+<p><strong>Known:</strong> Shortest path fully computed, never changes. <strong>Fringe:</strong> Reachable via one edge from known, tentative distance may update. <strong>Unknown:</strong> Not yet discovered.</p>
+
+<div class="card green">
+  <div class="card-label">Algorithm (Priority Queue)</div>
+<pre><code><span class="fn">dijkstra</span>(G, s):
+    PQ.Insert(s, dist=<span class="num">0</span>)
+    parent[s] = NULL; dist[s] = <span class="num">0</span>
+
+    <span class="kw">while</span> PQ not empty:
+        v = PQ.<span class="fn">ExtractMin</span>()
+        <span class="kw">for each</span> w adjacent to v:
+            <span class="kw">if</span> w is unseen:
+                dist[w] = dist[v] + wt(v,w)
+                PQ.<span class="fn">Insert</span>(w, dist[w])
+                parent[w] = v
+            <span class="kw">else if</span> w is fringe <span class="kw">AND</span> dist[v]+wt(v,w) &lt; dist[w]:
+                dist[w] = dist[v] + wt(v,w)
+                PQ.<span class="fn">decreaseKey</span>(w, dist[w])
+                parent[w] = v</code></pre>
+  <p><span class="tag runtime">Runtime</span> <strong>Θ(E log V)</strong> with binary heap &nbsp;|&nbsp; <strong>Θ(V² + E)</strong> with simple list</p>
+</div>
+
+<div class="card accent">
+  <div class="card-label">Critical: PQ Key</div>
+  <p>Dijkstra's PQ key = <code>dist[v] + wt(v,w)</code> → <strong>cumulative path cost</strong> from source. This is the key difference from Prim's.</p>
+</div>
+
+<h3>Correctness Proof Sketch (Induction)</h3>
+<p><strong>Base:</strong> s.d = 0 = δ(s,s) ✓</p>
+<p><strong>IH:</strong> First k known nodes have correct shortest paths.</p>
+<p><strong>Step:</strong> Node v becomes known with v.d = δ(s,u) + c(u,v). If a better path exists via another fringe node v', then δ(s,u') + c(u',v') + Δ < v.d. Since Δ ≥ 0 (no negative edges), δ(s,u') + c(u',v') < v.d, meaning Dijkstra's would have selected v' instead of v. <strong>Contradiction.</strong></p>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="prims">Prim's Algorithm</h2>
+
+<p><span class="tag algo">Minimum Spanning Tree</span> Grow a single tree by always adding the cheapest edge from a known node to an unknown node.</p>
+
+<div class="card green">
+  <div class="card-label">Algorithm</div>
+<pre><code><span class="fn">prim</span>(G, s):
+    PQ.Insert(s, wt=<span class="num">0</span>)
+    parent[s] = NULL
+
+    <span class="kw">while</span> PQ not empty:
+        v = PQ.<span class="fn">ExtractMin</span>()
+        <span class="kw">for each</span> w adjacent to v:
+            <span class="kw">if</span> w is unseen:
+                PQ.<span class="fn">Insert</span>(w, wt(v,w))    <span class="cm">// ← just edge weight!</span>
+                parent[w] = v
+            <span class="kw">else if</span> w is fringe <span class="kw">AND</span> wt(v,w) &lt; dist[w]:
+                dist[w] = wt(v,w)           <span class="cm">// ← just edge weight!</span>
+                PQ.<span class="fn">decreaseKey</span>(w, dist[w])
+                parent[w] = v</code></pre>
+  <p><span class="tag runtime">Runtime</span> <strong>Θ(E log V)</strong> — identical to Dijkstra's</p>
+</div>
+
+<div class="card accent">
+  <div class="card-label">Critical: PQ Key</div>
+  <p>Prim's PQ key = <code>wt(v,w)</code> → <strong>single edge weight only</strong>. NOT cumulative distance.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="kruskals">Kruskal's Algorithm</h2>
+
+<p><span class="tag algo">Minimum Spanning Tree</span> Grow a <strong>forest</strong>: sort all edges by weight, add cheapest edge that doesn't create a cycle.</p>
+
+<div class="card green">
+  <div class="card-label">Algorithm</div>
+<pre><code><span class="fn">kruskal</span>(G):
+    edgesAccepted = <span class="num">0</span>
+    DisjointSet s(NUM_VERTICES)
+    PriorityQueue Q <span class="cm">// all edges sorted by weight</span>
+
+    <span class="kw">while</span> edgesAccepted &lt; NUM_VERTICES - <span class="num">1</span>:
+        e = Q.<span class="fn">dequeue</span>()       <span class="cm">// cheapest remaining edge (u,v)</span>
+        uset = s.<span class="fn">find</span>(u)
+        vset = s.<span class="fn">find</span>(v)
+        <span class="kw">if</span> uset != vset:        <span class="cm">// different components → no cycle</span>
+            edgesAccepted++
+            s.<span class="fn">union</span>(uset, vset)</code></pre>
+  <p><span class="tag runtime">Runtime</span> <strong>Θ(E log V)</strong> — heap operations dominate</p>
+</div>
+
+<h3>Find-Union Data Structure</h3>
+<table>
+  <tr><th>Operation</th><th>Naïve</th><th>With Both Optimizations</th></tr>
+  <tr><td>makeSet(n)</td><td>Θ(n)</td><td>Θ(n)</td></tr>
+  <tr><td>find(i)</td><td>O(n) worst case</td><td>Θ(α(n)) ≈ O(1) amortized</td></tr>
+  <tr><td>union(i, j)</td><td>O(n) (find + O(1))</td><td>Θ(α(n)) ≈ O(1) amortized</td></tr>
+</table>
+
+<p><strong>Optimization 1 — Union by Rank:</strong> Attach shorter tree under taller tree. Guarantees O(log n) height.</p>
+<p><strong>Optimization 2 — Path Compression:</strong> During find, point every node directly to root. Flattens tree for future lookups.</p>
+<p>Together: m operations take <strong>Θ(m · α(n))</strong> where α = inverse Ackermann ≤ 4 for all practical n.</p>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="activity">Activity Selection</h2>
+
+<p><span class="tag algo">Interval Scheduling</span> Given activities with start/finish times, select the <strong>maximum number</strong> of non-overlapping activities.</p>
+
+<div class="card red">
+  <div class="card-label">Wrong Greedy Choices</div>
+  <p><strong>Earliest start ✗</strong> — a long early activity blocks many shorter ones.</p>
+  <p><strong>Shortest interval ✗</strong> — a short interval overlapping two long non-overlapping ones gives 1 instead of 2.</p>
+  <p><strong>Fewest conflicts ✗</strong> — counterexample construction exists (shown in lecture).</p>
+</div>
+
+<div class="card green">
+  <div class="card-label">Correct Greedy Choice</div>
+  <p><strong>Pick the next compatible activity that finishes earliest.</strong></p>
+  <p>Intuition: finishing early maximizes the remaining time window for future activities.</p>
+<pre><code><span class="fn">greedy_interval</span>(s, f):  <span class="cm">// f sorted ascending</span>
+    A = {a₁}; k = <span class="num">1</span>
+    <span class="kw">for</span> m = <span class="num">2</span> to n:
+        <span class="kw">if</span> s[m] &gt;= f[k]:   <span class="cm">// compatible</span>
+            A = A ∪ {aₘ}; k = m
+    <span class="kw">return</span> A</code></pre>
+  <p><span class="tag runtime">Runtime</span> <strong>Θ(n log n)</strong> to sort + Θ(n) greedy pass. <strong>Θ(n)</strong> if pre-sorted.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="knapsack">Fractional Knapsack</h2>
+
+<p><span class="tag algo">Optimization</span> Items with profit pᵢ and weight wᵢ. Knapsack capacity C. Can take <strong>any fraction</strong> of each item.</p>
+
+<div class="card red">
+  <div class="card-label">Wrong Greedy Choices</div>
+  <p><strong>Highest value ✗</strong> — ignores weight. Heavy valuable item may waste capacity.</p>
+  <p><strong>Lowest weight ✗</strong> — light worthless items beat heavy valuable ones.</p>
+  <p><strong>Max leftover space ✗</strong> — same as lowest weight. C=10, items (v=1,w=1) and (v=30,w=10): greedy gets 28, optimal is 30.</p>
+</div>
+
+<div class="card green">
+  <div class="card-label">Correct Greedy Choice</div>
+  <p><strong>Take the item with the highest value-to-weight ratio (pᵢ/wᵢ) to its maximum amount.</strong></p>
+<pre><code><span class="fn">fractional_knapsack</span>(items, C):
+    <span class="kw">for each</span> item: ratio[i] = item.p / item.w
+    <span class="fn">sort</span>(items, by ratio descending)
+    weight = <span class="num">0</span>; i = <span class="num">1</span>
+    <span class="kw">while</span> i &lt;= n <span class="kw">and</span> weight &lt; C:
+        <span class="kw">if</span> weight + items[i].w &lt;= C:
+            take all of items[i]; weight += items[i].w
+        <span class="kw">else</span>:
+            r = (C - weight) / items[i].w
+            take fraction r of items[i]; weight = C
+        i++</code></pre>
+  <p><span class="tag runtime">Runtime</span> <strong>Θ(n log n)</strong> to sort + Θ(n) pass</p>
+</div>
+
+<div class="card accent">
+  <div class="card-label">0/1 vs Fractional</div>
+  <p><strong>0/1 Knapsack: Greedy FAILS.</strong> Items (v=3,w=1,r=3), (v=5,w=2,r=2.5), (v=6,w=3,r=2), C=4. Greedy by ratio → profit 8. Optimal → items 1&3 = profit 9.</p>
+  <p>Both variants have optimal substructure. The fractional proof works because you can swap continuous ε weight. 0/1 requires all-or-nothing swaps that don't fit.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="bridge">Bridge Crossing</h2>
+
+<p>n people, one flashlight, bridge holds 2. Two cross together at slower speed. Minimize total time. Speeds sorted: s₁ ≤ s₂ ≤ … ≤ sₙ.</p>
+
+<div class="compare-grid">
+  <div class="card blue">
+    <div class="card-label">Strategy 1: Fastest Escorts</div>
+    <p>s₁ + sₙ cross → s₁ returns → s₁ + sₙ₋₁ cross → s₁ returns</p>
+    <p><strong>Cost:</strong> C₁ = sₙ + s₁ + sₙ₋₁ + s₁</p>
+  </div>
+  <div class="card purple">
+    <div class="card-label">Strategy 2: Slowest Together</div>
+    <p>s₁ + s₂ cross → s₁ returns → sₙ₋₁ + sₙ cross → s₂ returns</p>
+    <p><strong>Cost:</strong> C₂ = s₂ + s₁ + sₙ + s₂</p>
+  </div>
+</div>
+
+<div class="card accent">
+  <div class="card-label">The Decision Formula</div>
+  <p>C₁ − C₂ = <strong>sₙ₋₁ + s₁ − 2·s₂</strong></p>
+  <p>If <strong>positive → use Strategy 2</strong> (slowest together is cheaper).</p>
+  <p>If <strong>≤ 0 → use Strategy 1</strong> (fastest escorts is cheaper).</p>
+  <p>Recurse on remaining n − 2 people.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="runtime">Runtime Analysis</h2>
+
+<p>This section consolidates all runtimes, data structures, and complexity details across every algorithm.</p>
+
+<table>
+  <tr>
+    <th>Algorithm</th>
+    <th>Runtime</th>
+    <th>Key Data Structure</th>
+    <th>Notes</th>
+  </tr>
+  <tr>
+    <td><strong>Coin Change</strong> (greedy)</td>
+    <td>Θ(k · A/d_min)</td>
+    <td>None</td>
+    <td>k = # denominations, linear in coins used</td>
+  </tr>
+  <tr>
+    <td><strong>Dijkstra's</strong> (binary heap)</td>
+    <td><strong>Θ(E log V)</strong></td>
+    <td>Min-heap (indirect)</td>
+    <td>ExtractMin: V times × Θ(log V). Insert/decreaseKey: E times × Θ(log V)</td>
+  </tr>
+  <tr>
+    <td><strong>Dijkstra's</strong> (simple list)</td>
+    <td>Θ(V² + E)</td>
+    <td>Array</td>
+    <td>FindMin is Θ(V), called V times. Better for dense graphs where E ≈ V²</td>
+  </tr>
+  <tr>
+    <td><strong>Prim's</strong> (binary heap)</td>
+    <td><strong>Θ(E log V)</strong></td>
+    <td>Min-heap (indirect)</td>
+    <td>Identical structure to Dijkstra's</td>
+  </tr>
+  <tr>
+    <td><strong>Kruskal's</strong></td>
+    <td><strong>Θ(E log V)</strong></td>
+    <td>Heap + Find-Union</td>
+    <td>Sorting edges: Θ(E log E) = Θ(E log V). Find-Union: Θ(E · α(V)) ≈ Θ(E)</td>
+  </tr>
+  <tr>
+    <td><strong>Activity Selection</strong></td>
+    <td><strong>Θ(n log n)</strong></td>
+    <td>Sorted array</td>
+    <td>Θ(n log n) sort + Θ(n) pass. Θ(n) if pre-sorted by finish time</td>
+  </tr>
+  <tr>
+    <td><strong>Fractional Knapsack</strong></td>
+    <td><strong>Θ(n log n)</strong></td>
+    <td>Sorted array</td>
+    <td>Θ(n log n) sort by ratio + Θ(n) greedy pass</td>
+  </tr>
+  <tr>
+    <td><strong>Bridge Crossing</strong></td>
+    <td>Θ(n)</td>
+    <td>Sorted array</td>
+    <td>After Θ(n log n) sort, each step removes 2 people → Θ(n/2) = Θ(n)</td>
+  </tr>
+</table>
+
+<h3>Runtime Deep Dive: Dijkstra's & Prim's</h3>
+
+<div class="card blue">
+  <div class="card-label">Why Θ(E log V)?</div>
+  <p>Both algorithms have the same structure:</p>
+  <p>• <strong>Outer loop:</strong> runs |V| times (once per vertex). Each iteration calls <code>ExtractMin</code> → Θ(log V).</p>
+  <p>• <strong>Inner loop:</strong> runs |E| times total across all iterations (once per edge). Each iteration may call <code>Insert</code> or <code>decreaseKey</code> → Θ(log V).</p>
+  <p>• Total: Θ(V · log V + E · log V) = <strong>Θ((V + E) · log V) = Θ(E log V)</strong> for connected graphs.</p>
+</div>
+
+<div class="card purple">
+  <div class="card-label">Indirect Heap: Why It Matters</div>
+  <p><code>decreaseKey()</code> requires finding an element in the heap by its identity (not by position). A standard binary heap has no way to look up where a specific node lives.</p>
+  <p><strong>Indirect heap:</strong> maintains a secondary array <code>pos[]</code> mapping node ID → heap index. When a node's key decreases, look up its position in O(1), then percolate up in O(log V).</p>
+  <p>Without this: <code>decreaseKey</code> would require O(V) linear search, making total runtime Θ(E · V).</p>
+</div>
+
+<h3>Runtime Deep Dive: Kruskal's</h3>
+
+<div class="card blue">
+  <div class="card-label">Breakdown</div>
+  <p>• <strong>Sort edges:</strong> Θ(E log E). Since E ≤ V², we have log E ≤ 2 log V, so Θ(E log E) = Θ(E log V).</p>
+  <p>• <strong>Find operations:</strong> 2|E| calls (two finds per edge). With both optimizations: Θ(2E · α(V)).</p>
+  <p>• <strong>Union operations:</strong> At most |V| − 1 calls. With both optimizations: Θ(V · α(V)).</p>
+  <p>• <strong>Total:</strong> Θ(E log V + E · α(V) + V · α(V)) = <strong>Θ(E log V)</strong> since sorting dominates.</p>
+</div>
+
+<h3>Find-Union Complexity</h3>
+
+<table>
+  <tr>
+    <th>Configuration</th>
+    <th>find()</th>
+    <th>union()</th>
+    <th>m operations on n elements</th>
+  </tr>
+  <tr>
+    <td>No optimizations</td>
+    <td>O(n)</td>
+    <td>O(n)</td>
+    <td>O(m · n)</td>
+  </tr>
+  <tr>
+    <td>Union by rank only</td>
+    <td>O(log n)</td>
+    <td>O(log n)</td>
+    <td>O(m · log n)</td>
+  </tr>
+  <tr>
+    <td>Path compression only</td>
+    <td>amortized O(log n)</td>
+    <td>amortized O(log n)</td>
+    <td>O(m · log n)</td>
+  </tr>
+  <tr>
+    <td><strong>Both (rank + compression)</strong></td>
+    <td><strong>Θ(α(n)) ≈ O(1)</strong></td>
+    <td><strong>Θ(α(n)) ≈ O(1)</strong></td>
+    <td><strong>Θ(m · α(n))</strong></td>
+  </tr>
+</table>
+
+<p>α(n) is the <strong>inverse Ackermann function</strong>. It grows so slowly that α(n) ≤ 4 for any n up to ~10⁸⁰. Effectively constant for all practical purposes.</p>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="comparisons">Algorithm Comparisons</h2>
+
+<div class="card accent">
+  <div class="card-label">Dijkstra's vs Prim's — The Critical Difference</div>
+  <table>
+    <tr><th></th><th>Dijkstra's</th><th>Prim's</th></tr>
+    <tr><td><strong>Solves</strong></td><td>Single-source shortest paths</td><td>Minimum spanning tree</td></tr>
+    <tr><td><strong>PQ key</strong></td><td><code>dist[v] + wt(v,w)</code> — cumulative</td><td><code>wt(v,w)</code> — single edge weight</td></tr>
+    <tr><td><strong>Runtime</strong></td><td>Θ(E log V)</td><td>Θ(E log V)</td></tr>
+    <tr><td><strong>Negative edges?</strong></td><td>NO — proof breaks</td><td>YES — MST doesn't care about path cost</td></tr>
+  </table>
+  <p style="margin-top:10px;font-size:13px;color:var(--text-dim);">Code is nearly identical. Only the highlighted lines (PQ key computation) differ.</p>
+</div>
+
+<div class="card blue">
+  <div class="card-label">Prim's vs Kruskal's</div>
+  <table>
+    <tr><th></th><th>Prim's</th><th>Kruskal's</th></tr>
+    <tr><td><strong>Approach</strong></td><td>Grow one tree from a start node</td><td>Grow a forest by adding cheapest non-cycle edge</td></tr>
+    <tr><td><strong>Data structures</strong></td><td>Min-heap (indirect)</td><td>Min-heap + Find-Union</td></tr>
+    <tr><td><strong>Runtime</strong></td><td>Θ(E log V)</td><td>Θ(E log V)</td></tr>
+    <tr><td><strong>Better for</strong></td><td>Dense graphs</td><td>Sparse graphs / pre-sorted edges</td></tr>
+  </table>
+</div>
+
+<div class="card purple">
+  <div class="card-label">What Gets Exchanged in Each Proof</div>
+  <table>
+    <tr><th>Algorithm</th><th>Exchange</th><th>Key Inequality</th></tr>
+    <tr><td>Coin Change</td><td>Subset of small coins → 1 larger coin</td><td>small coins sum = larger coin value</td></tr>
+    <tr><td>Dijkstra's</td><td>Alt path through v' → path through v</td><td>δ(s,u')+c(e') < v.d contradicts PQ</td></tr>
+    <tr><td>Prim's / Kruskal's</td><td>Edge e' in MST cycle → cheaper edge e</td><td>weight(e) ≤ weight(e')</td></tr>
+    <tr><td>Activity Selection</td><td>First activity o₁ → earliest-finish i₁</td><td>i₁.f ≤ o₁.f ≤ o₂.s</td></tr>
+    <tr><td>Frac. Knapsack</td><td>ε weight of item j → ε of item n</td><td>rₙ ≥ rⱼ, value change ≥ 0</td></tr>
+  </table>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="proofs-os">Proofs: Optimal Substructure</h2>
+
+<p><span class="tag proof">Proof Blocks Format</span> On the quiz, you select correct steps and arrange them in order. Below are the correct steps for each algorithm.</p>
+
+<details>
+  <summary>Coin Change — Optimal Substructure</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> If C = {c₁, …, cₙ} is optimal for A cents, then C' = {c₂, …, cₙ} is optimal for A − c₁.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Assume C is optimal for A (n coins), but C' is NOT optimal for A − c₁.</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>∃ C'' making A − c₁ cents using j < n − 1 coins.</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>Construct C''' = {c₁} ∪ C''. Makes A cents using j + 1 coins.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>j + 1 < (n−1) + 1 = n. C''' uses fewer coins than C for amount A.</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>Contradiction: C''' is better than optimal C. ∴ C' is optimal for A − c₁. ∎</span></div>
+    <div class="card red" style="margin-top:14px"><div class="card-label">Distractors to Reject</div>
+      <p>• "We can split A into any two amounts and both are optimal" (FALSE)</p>
+      <p>• Steps proving the converse direction (combining sub-solutions)</p>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Dijkstra's — Optimal Substructure</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> If P = {p₁, …, pₙ} is the shortest path p₁→pₙ, then P' = {p₁, …, pₙ₋₁} is shortest p₁→pₙ₋₁.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Assume P is optimal from p₁ to pₙ, but P' is NOT optimal from p₁ to pₙ₋₁.</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>∃ better path P'' from p₁ to pₙ₋₁ with cost(P'') < cost(P').</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>Construct path P'' ∪ {pₙ}: follow P'' to pₙ₋₁, then take last edge to pₙ.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>cost(P'' ∪ {pₙ}) = cost(P'') + cₙ < cost(P') + cₙ = cost(P).</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>Contradiction: new path to pₙ is cheaper than optimal P. ∴ P' is optimal. ∎</span></div>
+  </div>
+</details>
+
+<details>
+  <summary>MST — Optimal Substructure</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> If T is MST and we remove edge e, the two subtrees T' and T'' are MSTs of their subgraphs.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Assume T is optimal MST (cost c), but subtree T' is NOT optimal for its subgraph (cost c').</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>∃ better sub-MST T''' with cost c''' < c'.</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>Replace T' with T''' in the original: reconnect via edge e and T''.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>New tree has cost c − c' + c''' < c (since c''' < c').</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>Contradiction: new spanning tree has lower cost than optimal T. ∴ T' is optimal. ∎</span></div>
+  </div>
+</details>
+
+<details>
+  <summary>Activity Selection — Optimal Substructure</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> If A = {a₁, …, aₙ} is optimal, then A' = {a₂, …, aₙ} is optimal for time frame starting at f₁.</p>
+    <p style="color:var(--accent);font-size:13px;">⚠ Subproblem = only activities starting at or after f₁ (finish time of a₁). Overlapping activities excluded.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Assume A is optimal (n activities) but A' is NOT optimal for subproblem after f₁.</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>∃ A'' for the subproblem with |A''| > |A'| = n − 1.</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>Construct {a₁} ∪ A''. Feasible because all of A'' starts after f₁.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>|{a₁} ∪ A''| = 1 + |A''| > 1 + (n−1) = n = |A|.</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>Contradiction: more activities than optimal A. ∴ A' is optimal. ∎</span></div>
+  </div>
+</details>
+
+<details>
+  <summary>Fractional Knapsack — Optimal Substructure</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> If X = {x₁, …, xₙ} is optimal for capacity C, then X' = {x₂, …, xₙ} is optimal for C − x₁·w₁.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Note V(X) = V(x₁) + V(X').</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>Assume X is optimal for C but X' is NOT optimal for C − x₁·w₁.</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>∃ X'' with V(X'') > V(X') that fills C − x₁·w₁.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>Construct {x₁} ∪ X'': value = V(x₁) + V(X'') > V(x₁) + V(X') = V(X).</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>Contradiction: better than optimal X. ∴ X' is optimal. ∎</span></div>
+  </div>
+</details>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="proofs-gcp">Proofs: Greedy Choice Property</h2>
+
+<details>
+  <summary>Coin Change — Greedy Choice (US coins {25,10,5,1})</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> Some optimal solution contains the largest coin cᵢ where cᵢ ≤ A.</p>
+    <div class="proof-step"><span class="step-num">1</span><span><strong>Case: penny</strong> (A ≤ 4). Only pennies available — trivially true.</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span><strong>Case: nickel</strong> (5 ≤ A ≤ 9). No nickel → ≥5 pennies. Replace 5 pennies with 1 nickel → fewer coins.</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span><strong>Case: dime</strong> (10 ≤ A ≤ 24). No dime → only nickels & pennies. All sub-cases (≥2 nickels, 1 nickel + ≥5 pennies, ≥10 pennies) can be replaced by a dime.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span><strong>Case: quarter</strong> (A ≥ 25). No quarter → only dimes/nickels/pennies. Any combo ≥25¢ has a 25¢ subset replaceable by one quarter.</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>In all cases, an optimal solution with the largest coin exists. ∎</span></div>
+  </div>
+</details>
+
+<details>
+  <summary>Dijkstra's — Greedy Choice (Correctness by Induction)</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> When node v is made known, v.d = δ(s, v).</p>
+    <div class="proof-step"><span class="step-num">1</span><span><strong>Base:</strong> s.d = 0 = δ(s, s). ✓</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span><strong>IH:</strong> First k known nodes have correct shortest paths.</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>Node v is (k+1)th known. v.d = δ(s,u) + c(u,v) — minimum over all fringe nodes.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>Suppose ∃ better path: s→u'→v'→…→v with cost δ(s,u') + c(u',v') + Δ < v.d, where Δ ≥ 0.</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>Since Δ ≥ 0: δ(s,u') + c(u',v') < v.d.</span></div>
+    <div class="proof-step"><span class="step-num">6</span><span>But then v' has smaller PQ key than v → Dijkstra's would have selected v' first. Contradiction. ∎</span></div>
+    <div class="card red" style="margin-top:14px"><div class="card-label">Key: Why No Negative Edges</div>
+      <p>Step 4 requires Δ ≥ 0. With negative edges, the remaining path cost could be negative, breaking Step 5.</p>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Prim's — Greedy Choice Property</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> The cheapest edge from known set to fringe is in some MST.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Let e = (S, v) be cheapest edge from known to unknown. Assume e is NOT in any MST.</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>Pick MST T. T already has a path from S to v (since T spans everything).</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>Adding e to T creates a cycle. On this cycle, ∃ another edge e' crossing the same cut.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>Swap: T' = T − e' + e. Still a valid spanning tree.</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>weight(T') = weight(T) − weight(e') + weight(e). Since e is cheapest cut edge: weight(e) ≤ weight(e').</span></div>
+    <div class="proof-step"><span class="step-num">6</span><span>∴ weight(T') ≤ weight(T). T' is an MST containing e. Contradiction. ∎</span></div>
+  </div>
+</details>
+
+<details>
+  <summary>Kruskal's — Greedy Choice Property</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> The globally cheapest edge not creating a cycle is in some MST.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Let e = (u,v) be cheapest edge connecting two different components. Assume e ∉ any MST.</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>Pick MST T. Adding e creates a cycle (T already connects u to v).</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>On the cycle, ∃ edge e' connecting the same two components.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>Since Kruskal's processes edges in order: weight(e) ≤ weight(e').</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>T' = T − e' + e has weight(T') ≤ weight(T). T' is MST containing e. Contradiction. ∎</span></div>
+  </div>
+</details>
+
+<details>
+  <summary>Activity Selection — Greedy Choice Property</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> The activity with the earliest finish time (i₁) is in some optimal solution.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Assume i₁ ∉ optimal solution O = {o₁, o₂, …, oₙ} (o₁ finishes first in O).</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>i₁.f ≤ o₁.f (i₁ has earliest finish of ALL activities).</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>o₂.s ≥ o₁.f (O is feasible → o₂ starts after o₁ finishes).</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>Combining: i₁.f ≤ o₁.f ≤ o₂.s → i₁ compatible with o₂ and all subsequent.</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>Exchange: O' = {i₁, o₂, …, oₙ}. |O'| = |O| = n. O' is optimal and contains i₁. Contradiction. ∎</span></div>
+    <div class="card accent" style="margin-top:14px"><div class="card-label">Important</div>
+      <p>The exchange produces a solution of <strong>equal size</strong>, not strictly better. We're showing i₁ CAN be in an optimal solution, not that it improves it.</p>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Fractional Knapsack — Greedy Choice Property</summary>
+  <div class="inner">
+    <p><strong>Claim:</strong> The item with highest ratio rₙ, taken maximally, is in some optimal solution.</p>
+    <div class="proof-step"><span class="step-num">1</span><span>Assume best-ratio item iₙ NOT taken maximally in optimal O. Let δ = Max(iₙ.w, C) − oₙ > 0.</span></div>
+    <div class="proof-step"><span class="step-num">2</span><span>∃ item j with oⱼ > 0 and rⱼ ≤ rₙ (knapsack full, some weight in a worse-ratio item).</span></div>
+    <div class="proof-step"><span class="step-num">3</span><span>Transfer ε ≤ δ weight from item j to item n.</span></div>
+    <div class="proof-step"><span class="step-num">4</span><span>Value change: −ε·rⱼ + ε·rₙ = ε(rₙ − rⱼ) ≥ 0.</span></div>
+    <div class="proof-step"><span class="step-num">5</span><span>V(O') = V(O) + ε(rₙ − rⱼ) ≥ V(O). O' is optimal with more of iₙ. Contradiction. ∎</span></div>
+    <div class="card red" style="margin-top:14px"><div class="card-label">Distractors to Reject</div>
+      <p>• "The value strictly increases" — FALSE, it's ≥ 0, could be 0 if ratios equal.</p>
+      <p>• Steps that swap entire items (that's 0/1 knapsack logic).</p>
+      <p>• "Take the highest value item" (wrong greedy choice).</p>
+    </div>
+  </div>
+</details>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="practice-dijkstra">Practice: Dijkstra's Algorithm</h2>
+
+<p><span class="tag algo">Quiz Format</span> Fill in the table showing <strong>every update</strong>. If distance goes 20→14→8, write "20, 14, 8". Path tracks each predecessor change.</p>
+
+<details>
+  <summary>Practice Problem 1 — Undirected Graph</summary>
+  <div class="inner">
+    <div class="graph-box">        A ---3--- B ---1--- C
+        |         |         |
+        7         4         2
+        |         |         |
+        D ---2--- E ---5--- F
+        |                   |
+        6                   3
+        |                   |
+        G --------8-------- H</div>
+    <p>Edges: A-B(3), A-D(7), B-C(1), B-E(4), C-F(2), D-E(2), D-G(6), E-F(5), F-H(3), G-H(8). Start at <strong>A</strong>.</p>
+
+    <details>
+      <summary>Show Solution</summary>
+      <div class="inner">
+        <table>
+          <tr><th>Node</th><th>Distance</th><th>Path</th></tr>
+          <tr><td>A</td><td>0</td><td>—</td></tr>
+          <tr><td>B</td><td>3</td><td>A</td></tr>
+          <tr><td>C</td><td>4</td><td>B</td></tr>
+          <tr><td>D</td><td>7</td><td>A</td></tr>
+          <tr><td>E</td><td>7</td><td>B</td></tr>
+          <tr><td>F</td><td>6</td><td>C</td></tr>
+          <tr><td>G</td><td>13</td><td>D</td></tr>
+          <tr><td>H</td><td>9</td><td>F</td></tr>
+        </table>
+        <p><strong>Order:</strong> A(0) → B(3) → C(4) → F(6) → D,E(7, tie) → H(9) → G(13)</p>
+        <p>Note: E gets distance 7 from B (3+4). When D is later processed, D→E = 7+2 = 9 > 7, so <strong>no update</strong> to E.</p>
+      </div>
+    </details>
+  </div>
+</details>
+
+<details>
+  <summary>Practice Problem 2 — Directed Graph</summary>
+  <div class="inner">
+    <p>Edges: v₀→v₁(4), v₀→v₂(2), v₂→v₁(1), v₂→v₃(8), v₁→v₃(5), v₁→v₄(10), v₃→v₄(2), v₃→v₅(6), v₄→v₅(1). Start at <strong>v₀</strong>.</p>
+
+    <details>
+      <summary>Show Solution</summary>
+      <div class="inner">
+        <table>
+          <tr><th>Node</th><th>Distance</th><th>Path</th></tr>
+          <tr><td>v₀</td><td>0</td><td>—</td></tr>
+          <tr><td>v₁</td><td>4, 3</td><td>v₀, v₂</td></tr>
+          <tr><td>v₂</td><td>2</td><td>v₀</td></tr>
+          <tr><td>v₃</td><td>10, 8</td><td>v₂, v₁</td></tr>
+          <tr><td>v₄</td><td>13, 10</td><td>v₁, v₃</td></tr>
+          <tr><td>v₅</td><td>14, 11</td><td>v₃, v₄</td></tr>
+        </table>
+        <p><strong>Order:</strong> v₀(0) → v₂(2) → v₁(3) → v₃(8) → v₄(10) → v₅(11)</p>
+        <p>v₁ updates: initially 4 from v₀, then 2+1=3 from v₂.</p>
+        <p>v₃ updates: initially 2+8=10 from v₂, then 3+5=8 from v₁.</p>
+        <p>v₄ updates: initially 3+10=13 from v₁, then 8+2=10 from v₃.</p>
+        <p>v₅ updates: initially 8+6=14 from v₃, then 10+1=11 from v₄.</p>
+      </div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="practice-mst">Practice: MST</h2>
+
+<p><span class="tag algo">Quiz Format</span> Copy nodes only, then fill in MST edges. Use Prim's or Kruskal's — whichever you prefer.</p>
+
+<details>
+  <summary>Practice Problem — Kruskal's</summary>
+  <div class="inner">
+    <div class="graph-box">        A ---5--- B ---3--- C
+        |       / |         |
+        2     7   6         4
+        |   /     |         |
+        D ---1--- E ---8--- F</div>
+    <p>Edges: A-B(5), A-D(2), B-C(3), B-D(7), B-E(6), C-F(4), D-E(1), E-F(8)</p>
+
+    <details>
+      <summary>Show Solution</summary>
+      <div class="inner">
+        <p><strong>Sort edges:</strong> D-E(1), A-D(2), B-C(3), C-F(4), A-B(5), B-E(6), B-D(7), E-F(8)</p>
+        <table>
+          <tr><th>Edge</th><th>Weight</th><th>Action</th><th>Components</th></tr>
+          <tr><td>D-E</td><td>1</td><td>✓ Add</td><td>{D,E} {A} {B} {C} {F}</td></tr>
+          <tr><td>A-D</td><td>2</td><td>✓ Add</td><td>{A,D,E} {B} {C} {F}</td></tr>
+          <tr><td>B-C</td><td>3</td><td>✓ Add</td><td>{A,D,E} {B,C} {F}</td></tr>
+          <tr><td>C-F</td><td>4</td><td>✓ Add</td><td>{A,D,E} {B,C,F}</td></tr>
+          <tr><td>A-B</td><td>5</td><td>✓ Add</td><td>{A,B,C,D,E,F}</td></tr>
+          <tr><td>B-E</td><td>6</td><td>✗ Cycle</td><td>—</td></tr>
+        </table>
+        <p><strong>MST edges:</strong> D-E(1), A-D(2), B-C(3), C-F(4), A-B(5). <strong>Total: 15</strong></p>
+      </div>
+    </details>
+  </div>
+</details>
+
+<details>
+  <summary>Practice Problem — Prim's (from v₀)</summary>
+  <div class="inner">
+    <p>Edges: v₀-v₁(4), v₀-v₃(9), v₁-v₂(3), v₁-v₃(5), v₁-v₄(2), v₁-v₅(8), v₂-v₅(7), v₃-v₄(6), v₄-v₅(1)</p>
+
+    <details>
+      <summary>Show Solution</summary>
+      <div class="inner">
+        <table>
+          <tr><th>Step</th><th>Known Set</th><th>Cheapest Cut Edge</th><th>Add</th></tr>
+          <tr><td>1</td><td>{v₀}</td><td>v₀-v₁(4) vs v₀-v₃(9)</td><td>v₁ via 4</td></tr>
+          <tr><td>2</td><td>{v₀,v₁}</td><td>v₁-v₄(2), v₁-v₂(3), v₁-v₃(5), …</td><td>v₄ via 2</td></tr>
+          <tr><td>3</td><td>{v₀,v₁,v₄}</td><td>v₄-v₅(1), v₁-v₂(3), …</td><td>v₅ via 1</td></tr>
+          <tr><td>4</td><td>{v₀,v₁,v₄,v₅}</td><td>v₁-v₂(3), v₁-v₃(5), …</td><td>v₂ via 3</td></tr>
+          <tr><td>5</td><td>{v₀,v₁,v₂,v₄,v₅}</td><td>v₁-v₃(5), v₃-v₄(6), v₀-v₃(9)</td><td>v₃ via 5</td></tr>
+        </table>
+        <p><strong>MST edges:</strong> v₀-v₁(4), v₁-v₄(2), v₄-v₅(1), v₁-v₂(3), v₁-v₃(5). <strong>Total: 15</strong></p>
+      </div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="tf-quiz">True / False Quiz</h2>
+
+<p>Click <strong>True</strong> or <strong>False</strong> to check your answer. The quiz covers all topics that could appear on the exam.</p>
+
+<div id="tf-container"></div>
+
+<script>
+const tfData = [
+  {q: "A greedy algorithm always finds the optimal solution to any optimization problem.", a: false, e: "Greedy only works when the problem has both optimal substructure AND the greedy choice property. Many problems (like 0/1 knapsack) cannot be solved greedily."},
+  {q: "If a problem has optimal substructure, a greedy algorithm will solve it.", a: false, e: "Optimal substructure is necessary but NOT sufficient. You also need the greedy choice property."},
+  {q: "If a greedy algorithm correctly solves a problem, the problem must have optimal substructure.", a: true, e: "Lemma 2 from lecture: greedy works → optimal substructure."},
+  {q: "A greedy algorithm may backtrack and change a previous decision.", a: false, e: "By definition, greedy algorithms never backtrack."},
+  {q: "Optimal substructure means optimal parts can always be combined into an optimal whole.", a: false, e: "It means an optimal whole contains optimal parts — NOT the reverse. You cannot split arbitrarily and combine. Lecture explicitly warns about this."},
+  {q: "The greedy coin change algorithm works optimally for any denomination set.", a: false, e: "Counterexample: {1,6,10,25}, A=12. Greedy: 10+1+1 (3 coins). Optimal: 6+6 (2 coins)."},
+  {q: "The greedy coin change algorithm works optimally for US coins {1,5,10,25}.", a: true, e: "Proven via case analysis of the greedy choice property."},
+  {q: "The coin change problem has optimal substructure regardless of denomination set.", a: true, e: "Optimal substructure always holds. It's the greedy choice property that fails for certain denominations."},
+  {q: "Dijkstra's algorithm works correctly on graphs with negative edge weights.", a: false, e: "The proof requires Δ ≥ 0. With negative edges, a path through another node could have a negative remaining cost, breaking the contradiction."},
+  {q: "Dijkstra's algorithm runs in Θ(E log V) with a binary heap.", a: true, e: "V ExtractMin operations at Θ(log V) each, plus E Insert/decreaseKey operations at Θ(log V) each."},
+  {q: "In Dijkstra's, once a node is marked 'known,' its distance may still change.", a: false, e: "Once known, the distance is final and will never be updated."},
+  {q: "Dijkstra's shortest-path tree is the same as the MST.", a: false, e: "Dijkstra's minimizes path cost from source; MST minimizes total edge weight. PS5 provides a counterexample."},
+  {q: "A graph can have multiple MSTs with different total weights.", a: false, e: "Multiple MSTs may exist (with tied edges), but they ALL have the same total weight."},
+  {q: "An MST with V vertices always has exactly V − 1 edges.", a: true, e: "Any tree with V vertices has V − 1 edges."},
+  {q: "Removing any edge from an MST gives two subtrees that are each MSTs of their subgraphs.", a: true, e: "This is the MST optimal substructure property."},
+  {q: "Prim's and Kruskal's always produce the exact same MST.", a: false, e: "They produce MSTs with the same total weight, but may differ when edge weights are tied."},
+  {q: "In Prim's algorithm, the PQ key is the cumulative path cost from the start node.", a: false, e: "That's Dijkstra's! Prim's uses the single edge weight wt(v,w)."},
+  {q: "Kruskal's runs in Θ(E log V) with union-by-rank and path compression.", a: true, e: "Sorting edges dominates at Θ(E log E) = Θ(E log V). Find-union operations are nearly O(1) amortized."},
+  {q: "In Kruskal's, an edge is rejected if it connects nodes in the same component.", a: true, e: "Same component means adding the edge would create a cycle."},
+  {q: "The find-union with both optimizations gives Θ(α(n)) ≈ O(1) amortized per operation.", a: true, e: "α(n) is the inverse Ackermann function, ≤ 4 for all practical n."},
+  {q: "The correct greedy choice for activity selection is earliest start time.", a: false, e: "Earliest FINISH time is correct. Earliest start fails when a long early activity blocks many shorter ones."},
+  {q: "Selecting the shortest activity is a correct greedy choice for activity selection.", a: false, e: "A short activity overlapping two longer non-overlapping ones gives 1 instead of 2."},
+  {q: "Activity selection runs in Θ(n) if activities are already sorted by finish time.", a: true, e: "The greedy pass is a single linear scan."},
+  {q: "In the activity selection proof, swapping i₁ for o₁ produces a strictly better solution.", a: false, e: "It produces a solution of EQUAL size (same number of activities). The exchange shows i₁ CAN be in an optimal solution."},
+  {q: "The fractional knapsack problem can be solved optimally with a greedy algorithm.", a: true, e: "Using the highest value-to-weight ratio first."},
+  {q: "The 0/1 knapsack problem can be solved optimally with a greedy algorithm.", a: false, e: "Greedy fails for 0/1. It requires dynamic programming."},
+  {q: "The correct greedy choice for fractional knapsack is the item with the highest value.", a: false, e: "Highest value-to-weight RATIO is correct, not highest value alone."},
+  {q: "Both 0/1 and fractional knapsack have optimal substructure.", a: true, e: "Both have optimal substructure. The difference is greedy works for fractional but not 0/1."},
+  {q: "In the bridge crossing problem, always having the fastest escort is optimal.", a: false, e: "Sometimes sending the two slowest together (Strategy 2) is cheaper. Must compare both."},
+  {q: "The bridge crossing decision formula is: if sₙ₋₁ + s₁ − 2s₂ > 0, use Strategy 2.", a: true, e: "Positive means Strategy 1 is more expensive, so Strategy 2 is better."},
+  {q: "Dijkstra's and Prim's have the same code structure and runtime but solve different problems.", a: true, e: "Nearly identical code. Only the PQ key differs: cumulative distance vs. single edge weight."},
+  {q: "An indirect heap is needed for efficient decreaseKey in Dijkstra's and Prim's.", a: true, e: "Without it, decreaseKey requires O(V) linear search, making total runtime Θ(EV)."},
+  {q: "Dijkstra's without a priority queue runs in Θ(V² + E).", a: true, e: "FindMin is Θ(V) called V times. Inner loop processes E edges. Total: Θ(V² + E)."},
+  {q: "In the fractional knapsack proof, transferring weight always strictly increases value.", a: false, e: "The change is ε(rₙ − rⱼ) ≥ 0, which could be zero if ratios are equal."},
+  {q: "The activity selection subproblem considers ALL remaining activities.", a: false, e: "It only considers activities starting at or after f₁ (finish time of first selected). Overlapping activities are excluded."},
+];
+
+const container = document.getElementById('tf-container');
+tfData.forEach((item, idx) => {
+  const div = document.createElement('div');
+  div.className = 'tf-item';
+  div.innerHTML = `
+    <div class="tf-q">${idx+1}. ${item.q}</div>
+    <div class="tf-btns">
+      <button class="tf-btn" data-val="true" onclick="checkTF(this, ${item.a}, ${idx})">True</button>
+      <button class="tf-btn" data-val="false" onclick="checkTF(this, ${item.a}, ${idx})">False</button>
+    </div>
+    <div class="tf-explain" id="tf-exp-${idx}">${item.e}</div>
+  `;
+  container.appendChild(div);
+});
+
+function checkTF(btn, answer, idx) {
+  const parent = btn.parentElement;
+  const btns = parent.querySelectorAll('.tf-btn');
+  btns.forEach(b => { b.className = 'tf-btn'; b.disabled = true; });
+  
+  const clicked = btn.dataset.val === 'true';
+  const correct = clicked === answer;
+  
+  btn.className = 'tf-btn ' + (correct ? 'selected-true' : 'selected-false');
+  
+  if (!correct) {
+    btns.forEach(b => {
+      if ((b.dataset.val === 'true') === answer) {
+        b.className = 'tf-btn correct-highlight';
+      }
+    });
+  }
+  
+  const exp = document.getElementById(`tf-exp-${idx}`);
+  exp.className = 'tf-explain show ' + (correct ? 'right' : 'wrong');
+}
+</script>
+
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="pitfalls">Pitfalls & Counterexamples</h2>
+
+<div class="card red">
+  <div class="card-label">Coin Change</div>
+  <p>D = {1, 6, 10, 25}, A = 12. Greedy: 10+1+1 (3). Optimal: 6+6 (2). Proof fails at dime case.</p>
+</div>
+
+<div class="card red">
+  <div class="card-label">Dijkstra's ≠ MST</div>
+  <p>Triangle: A-B(1), A-C(2), B-C(1). Dijkstra's from A: tree weight 3. MST weight: 2. Different trees.</p>
+</div>
+
+<div class="card red">
+  <div class="card-label">0/1 Knapsack Greedy Fails</div>
+  <p>Items (3,1), (5,2), (6,3), C=4. Greedy ratio: items 1+2 = profit 8. Optimal: items 1+3 = profit 9.</p>
+</div>
+
+<div class="card red">
+  <div class="card-label">Fractional Knapsack: Wrong Greedy Choices</div>
+  <p><strong>Max value:</strong> n=3, C=20 → profit 28.2 (not 31.5). <strong>Min weight:</strong> C=10, items (v=1,w=1)+(v=30,w=10) → profit 28 (not 30).</p>
+</div>
+
+<div class="card red">
+  <div class="card-label">Activity Selection: Wrong Greedy Choices</div>
+  <p>Earliest start, shortest interval, and fewest conflicts all have known counterexamples. Only earliest finish works.</p>
+</div>
+
+<div class="card red">
+  <div class="card-label">Bridge Crossing: Neither Strategy Always Wins</div>
+  <p>Must compare sₙ₋₁ + s₁ − 2s₂ at each step. Using only fastest-escorts or only slowest-together both have counterexamples.</p>
+</div>
+
+<div class="card accent" style="margin-top:32px">
+  <div class="card-label">General Rules to Remember</div>
+  <p>• Greedy ≠ always correct. Every algorithm needs both properties proven.</p>
+  <p>• Optimal substructure defines a <em>specific</em> decomposition, not arbitrary splitting.</p>
+  <p>• The exchange argument shows the greedy choice is in <em>some</em> optimal solution (≥ as good), not necessarily better.</p>
+  <p>• Dijkstra's requires no negative edges. Prim's doesn't care about negative edges.</p>
+  <p>• Know the PQ key difference: Dijkstra's = cumulative distance, Prim's = edge weight only.</p>
+</div>
+
+</main>
+
+<script>
+// Active nav tracking
+const sections = document.querySelectorAll('h2[id], h3[id]');
+const navLinks = document.querySelectorAll('nav a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -75% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// Close mobile nav on link click
+navLinks.forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelector('nav').classList.remove('open');
+  });
+});
+</script>
+
+</body>
+</html>
