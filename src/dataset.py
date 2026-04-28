@@ -1,7 +1,5 @@
 """
 dataset.py — Deepfake Dataset Loader
-
-KEY FIX vs the original:
 The same frame filename (e.g. 123_456_frame_0000.jpg) exists in multiple
 manipulation folders (Deepfakes/, Face2Face/, FaceSwap/, ...). The original
 dataset.py used `break` after the first match in os.walk, which meant only

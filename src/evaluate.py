@@ -9,9 +9,9 @@ Produces the numbers you'll need for the final report:
   - optional test-time augmentation (horizontal-flip average): small but consistent boost
 
 Usage (from project root):
-  python -m src.cnn_pipeline.evaluate
-  python -m src.cnn_pipeline.evaluate --tta                  # enable TTA
-  python -m src.cnn_pipeline.evaluate --checkpoint data/weights/cnn_last.pt
+  python -m src.evaluate
+  python -m src.evaluate --tta                  # enable TTA
+  python -m src.evaluate --checkpoint data/weights/cnn_last.pt
 """
 import argparse
 import os
@@ -46,6 +46,7 @@ PROCESSED_DIR = os.path.join(PROJECT_ROOT, "data", "processed")
 SPLITS_DIR    = os.path.join(PROJECT_ROOT, "data", "splits")
 WEIGHTS_DIR   = os.path.join(PROJECT_ROOT, "data", "weights")
 FIGURES_DIR   = os.path.join(PROJECT_ROOT, "docs", "figures")
+os.makedirs(WEIGHTS_DIR, exist_ok=True)
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
 
