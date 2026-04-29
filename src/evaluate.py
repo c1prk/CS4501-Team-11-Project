@@ -1,18 +1,3 @@
-"""
-evaluate.py — CNN evaluation with test-time augmentation and per-method breakdown
-
-Produces the numbers you'll need for the final report:
-  - overall test accuracy, precision, recall, F1 per class
-  - AUC-ROC (with probability outputs)
-  - confusion matrix (as PNG and as printed numbers)
-  - per-manipulation-method accuracy (the analysis slide 9 gestures at but doesn't show)
-  - optional test-time augmentation (horizontal-flip average): small but consistent boost
-
-Usage (from project root):
-  python -m src.evaluate
-  python -m src.evaluate --tta                  # enable TTA
-  python -m src.evaluate --checkpoint data/weights/cnn_last.pt
-"""
 import argparse
 import os
 import sys

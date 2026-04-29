@@ -18,8 +18,6 @@ SPLITS_DIR = os.path.join(BASE_DIR, "data", "splits")
 
 
 def discover_categories():
-    """FIX: walk one level into manipulated_frames/ and original_frames/ 
-    so we get each type (Deepfakes, Face2Face, etc.) as its own category."""
     categories = {}
     for top_folder, label in [("manipulated_frames", "fake"), ("original_frames", "real")]:
         top_path = os.path.join(BASE_DATA_DIR, top_folder)

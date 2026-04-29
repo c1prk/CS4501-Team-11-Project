@@ -1,17 +1,3 @@
-"""
-dataset.py — Deepfake Dataset Loader
-The same frame filename (e.g. 123_456_frame_0000.jpg) exists in multiple
-manipulation folders (Deepfakes/, Face2Face/, FaceSwap/, ...). The original
-dataset.py used `break` after the first match in os.walk, which meant only
-ONE physical image was loaded per filename — silently dropping ~half the
-training data. This version mirrors the index+seen_count logic from
-classifier.py so every occurrence in a split file maps to a distinct image.
-
-Also adds:
-- Optional training-time augmentation
-- Faster loading (index-based, no os.walk per sample)
-- ImageNet normalization matching torchvision pretrained models
-"""
 import os
 import cv2
 import torch
