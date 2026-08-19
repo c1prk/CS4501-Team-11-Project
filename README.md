@@ -13,6 +13,13 @@ We compare classical computer vision and deep learning for deepfake detection us
 | BoVW + SVM (improved) | 66.9% |
 | ResNet-18 + TTA | **84.5%** |
 
+## Key Findings
+
+- **ResNet-18 significantly outperformed classical methods**, achieving 84.5% accuracy vs. 66.9% for the best classical approach — a 17.6 point gap over the majority baseline.
+- **Spatial asymmetry + SVM underperformed even the majority baseline (51.0% vs 66.5%)**, suggesting that bilateral SIFT asymmetry alone is not a reliable signal for detecting modern face manipulations. Modern deepfake pipelines (e.g. FaceSwap, NeuralTextures) produce spatially consistent outputs that do not exhibit the geometric irregularities SIFT was designed to capture.
+- **BoVW recovered to near baseline (66.9%)** by aggregating SIFT descriptors into a visual vocabulary rather than relying on asymmetry scores, but still could not approach CNN level performance.
+- These results suggest that learned feature representations generalize better across manipulation types than handcrafted geometric features, motivating further exploration of hybrid or attention based approaches.
+
 ## Setup
 
 ```bash
